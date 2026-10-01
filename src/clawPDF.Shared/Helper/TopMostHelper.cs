@@ -86,14 +86,18 @@ namespace clawSoft.clawPDF.Shared.Helper
             }
         }
 
-        public static DialogResult ShowDialogTopMost(SaveFileDialog saveFileDialog, bool revertWhenActive = false)
+        public static DialogResult ShowDialogTopMost(SaveFileDialog saveFileDialog, bool revertWhenActive = false,
+            bool rememberPosition = false)
         {
             var form = new Form();
             MakeTopMostForm(form, revertWhenActive);
             form.TopMost =
                 !revertWhenActive; //directly deactivate topmost -> dialog should stay in foreground but is not locked there
 
-            // remember position/size of the "Save as" dialog between calls
+            if (!rememberPosition)
+                return saveFileDialog.ShowDialog(form);
+
+            // remember position/size of the "Save as" dialog between calls (option in the application settings)
             DialogResult result;
             using (new FileDialogPlacementTracker("SaveFileDialog"))
             {

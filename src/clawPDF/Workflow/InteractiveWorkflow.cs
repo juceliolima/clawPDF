@@ -246,7 +246,8 @@ namespace clawSoft.clawPDF.Workflow
 
             saveFileDialog.FileName = tmpFile;
 
-            var result = TopMostHelper.ShowDialogTopMost(saveFileDialog, !Job.Profile.SkipPrintDialog);
+            var result = TopMostHelper.ShowDialogTopMost(saveFileDialog, !Job.Profile.SkipPrintDialog,
+                Settings.ApplicationSettings.RememberSaveDialogPosition);
 
             if (result != DialogResult.OK)
             {
@@ -647,7 +648,8 @@ namespace clawSoft.clawPDF.Workflow
 
         private bool LaunchSaveFileForRetyping(SaveFileDialog saveFileDialog)
         {
-            var result = TopMostHelper.ShowDialogTopMost(saveFileDialog, !Job.Profile.SkipPrintDialog);
+            var result = TopMostHelper.ShowDialogTopMost(saveFileDialog, !Job.Profile.SkipPrintDialog,
+                Settings.ApplicationSettings.RememberSaveDialogPosition);
 
             if (result != DialogResult.OK)
             {
