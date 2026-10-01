@@ -24,6 +24,9 @@ namespace clawSoft.clawPDF.Views
         /// <summary>Drop-down of the "Merge All" split button (one entry per printer)</summary>
         private readonly ContextMenu _mergeByPrinterMenu = new ContextMenu();
 
+        /// <summary>Drop-down of the "Delete" split button (one entry per printer)</summary>
+        private readonly ContextMenu _deleteByPrinterMenu = new ContextMenu();
+
         public ManagePrintJobsWindow()
         {
             InitializeComponent();
@@ -52,6 +55,9 @@ namespace clawSoft.clawPDF.Views
             MergeByPrinterButton.ToolTip =
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
                     "MergeByPrinterToolTip", "Merge all jobs of one printer");
+            DeleteByPrinterButton.ToolTip =
+                TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
+                    "DeleteByPrinterToolTip", "Delete all jobs of one printer");
             PreviewButton.ToolTip =
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
                     "PreviewToolTip", "Preview the selected print job (double click / Enter)");
@@ -60,7 +66,53 @@ namespace clawSoft.clawPDF.Views
                     "SaveToolTip", "Save the selected print job now, using the default profile");
             UpdatePreviewButton();
 
-            ((ManagePrintJobsViewModel)DataContext).ConfirmMergeOfDifferentPrinters = ConfirmMergeOfDifferentPrinters;
+            var vm = (ManagePrintJobsViewModel)DataContext;
+            vm.ConfirmMergeOfDifferentPrinters = ConfirmMergeOfDifferentPrinters;
+            vm.ConfirmDelete = ConfirmDelete;
+        }
+
+        /// <summary>
+        ///     Confirmation before print jobs are deleted (selection or all jobs of a printer)
+        /// </summary>
+        private bool ConfirmDelete(int count, string printerName)
+        {
+            var translator = TranslationHelper.Instance.TranslatorInstance;
+            string message;
+
+            if (printerName != null)
+            {
+                var format = translator.GetTranslation("ManagePrintJobsWindow", "DeletePrinterJobsQuestion",
+                    "Delete all {0} print job(s) of printer \"{1}\"?");
+                message = SafeFormat(format, count, string.IsNullOrEmpty(printerName) ? "?" : printerName);
+            }
+            else if (count == 1)
+            {
+                message = translator.GetTranslation("ManagePrintJobsWindow", "DeleteJobQuestion",
+                    "Delete the selected print job?");
+            }
+            else
+            {
+                var format = translator.GetTranslation("ManagePrintJobsWindow", "DeleteJobsQuestion",
+                    "Delete the {0} selected print jobs?");
+                message = SafeFormat(format, count, "");
+            }
+
+            var caption = translator.GetTranslation("ManagePrintJobsWindow", "DeleteCaption", "Delete");
+
+            return MessageWindow.ShowTopMost(message, caption, MessageWindowButtons.YesNo,
+                       MessageWindowIcon.Question) == MessageWindowResponse.Yes;
+        }
+
+        private static string SafeFormat(string format, int count, string name)
+        {
+            try
+            {
+                return string.Format(format, count, name);
+            }
+            catch (FormatException)
+            {
+                return format;
+            }
         }
 
         /// <summary>
@@ -187,6 +239,47 @@ namespace clawSoft.clawPDF.Views
             _mergeByPrinterMenu.PlacementTarget = MergeAllButton;
             _mergeByPrinterMenu.Placement = PlacementMode.Bottom;
             _mergeByPrinterMenu.IsOpen = true;
+        }
+
+        /// <summary>
+        ///     Opens the drop-down of the "Delete" split button with one entry per printer
+        /// </summary>
+        private void DeleteByPrinterButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = (ManagePrintJobsViewModel)DataContext;
+            var format = TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
+                "DeleteFromPrinter", "Delete from {0} ({1})");
+
+            _deleteByPrinterMenu.Items.Clear();
+            foreach (var printer in vm.GetPrintersWithJobCount())
+            {
+                var printerName = printer.Key;
+                var name = string.IsNullOrEmpty(printerName) ? "?" : printerName;
+                string header;
+                try
+                {
+                    header = string.Format(format, name, printer.Value);
+                }
+                catch (FormatException)
+                {
+                    header = name + " (" + printer.Value + ")";
+                }
+
+                var item = new MenuItem { Header = header };
+                item.Click += (s, args) =>
+                {
+                    vm.DeleteJobsOfPrinter(printerName);
+                    UpdatePreviewButton();
+                };
+                _deleteByPrinterMenu.Items.Add(item);
+            }
+
+            if (_deleteByPrinterMenu.Items.Count == 0)
+                return;
+
+            _deleteByPrinterMenu.PlacementTarget = DeleteButton;
+            _deleteByPrinterMenu.Placement = PlacementMode.Bottom;
+            _deleteByPrinterMenu.IsOpen = true;
         }
 
         private void ShowPreview(IJobInfo jobInfo)

@@ -49,8 +49,11 @@
                 <!-- split button: merge only the jobs of one printer -->
                 <Button Margin="1 10 5 10" Name="MergeByPrinterButton" Padding="4 5" MinWidth="0"
                         Click="MergeByPrinterButton_OnClick" Content="&#x25BE;" />
-                <Button Margin="10 10 5 10" Name="DeleteButton" Padding="5" Command="{Binding DeleteJobCommand}"
+                <Button Margin="10 10 0 10" Name="DeleteButton" Padding="5" Command="{Binding DeleteJobCommand}"
                         CommandParameter="{Binding SelectedItems, ElementName=JobList}" Content="Delete" />
+                <!-- split button: delete all jobs of one printer -->
+                <Button Margin="1 10 5 10" Name="DeleteByPrinterButton" Padding="4 5" MinWidth="0"
+                        Click="DeleteByPrinterButton_OnClick" Content="&#x25BE;" />
                 <Button Margin="10 10 5 10" Name="PreviewButton" Padding="5" Click="PreviewButton_OnClick"
                         Content="Preview" />
                 <Button Margin="10 10 5 10" Name="SaveButton" Padding="5" Click="SaveButton_OnClick"

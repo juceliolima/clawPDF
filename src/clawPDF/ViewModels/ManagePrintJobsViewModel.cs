@@ -91,12 +91,49 @@ namespace clawSoft.clawPDF.ViewModels
                 JobInfos.Refresh();
         }
 
+        /// <summary>
+        ///     Asked before jobs are deleted. Receives the number of jobs and the printer name
+        ///     (null when deleting the selection). Returns true to delete. If not set, jobs are deleted without asking.
+        /// </summary>
+        public Func<int, string, bool> ConfirmDelete { get; set; }
+
         private void ExecuteDeleteJob(object o)
         {
             var jobs = o as IEnumerable<object>;
             if (jobs == null)
                 return;
 
+            var jobList = jobs.ToArray();
+            if (jobList.Length == 0)
+                return;
+
+            if (ConfirmDelete != null && !ConfirmDelete(jobList.Length, null))
+                return;
+
+            DeleteJobs(jobList);
+        }
+
+        /// <summary>
+        ///     Deletes all jobs that were printed on the given printer (after confirmation)
+        /// </summary>
+        public void DeleteJobsOfPrinter(string printerName)
+        {
+            var jobs = _jobInfos
+                .Where(j => string.Equals(PrinterOf(j), printerName, StringComparison.OrdinalIgnoreCase))
+                .Cast<object>()
+                .ToArray();
+
+            if (jobs.Length == 0)
+                return;
+
+            if (ConfirmDelete != null && !ConfirmDelete(jobs.Length, printerName ?? ""))
+                return;
+
+            DeleteJobs(jobs);
+        }
+
+        private void DeleteJobs(IEnumerable<object> jobs)
+        {
             foreach (var job in jobs.ToArray())
             {
                 var jobInfo = (IJobInfo)job;
