@@ -39,7 +39,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>signClawPDF.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\clawPDF.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
     <DebugSymbols>true</DebugSymbols>
@@ -168,7 +168,6 @@
     <None Include="Resources\ISOcoated_v2_300_eci.icc" />
     <None Include="Resources\ISOcoated_v2_grey1c_bas.ICC" />
     <None Include="Resources\WebCoatedFOGRA28.icc" />
-    <None Include="signClawPDF.pfx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CoreResources.resx">

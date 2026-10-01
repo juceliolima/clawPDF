@@ -1606,7 +1606,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF.Core, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF.Core, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_077D86EFCA200ED740A022D2ED44DAD5"
@@ -1899,7 +1899,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF.PDFProcessing, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF.PDFProcessing, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_2364FCB8E869E6AC1E0E81DDAFF07B8E"
@@ -1961,7 +1961,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF.Settings, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF.Settings, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_259C1279931DBA26E53C06B6C48B4262"
@@ -2012,7 +2012,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_2ADCA95456CE47B9A8F7651A167A03F4"
@@ -2440,7 +2440,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF.Bridge, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF.Bridge, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_4E05DB632D024749BCF6ECFC7F09AB29"
@@ -2808,7 +2808,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF.Mail, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF.Mail, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_70B06888A012A2F2FD2CBFAD6F3F515D"
@@ -2910,7 +2910,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF.Shared, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF.Shared, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_74985A10838D5A45A31A9B0FBA96BA7E"
@@ -3054,7 +3054,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:SetupHelper, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:SetupHelper, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_7F78C114226A455AA68D0A82851D76E8"
@@ -3551,7 +3551,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF.Shared, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF.Shared, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_B32A442975C6408AAA75228E6EAF2175"
@@ -3804,7 +3804,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF.Utilities, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF.Utilities, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_DA14A02C2BA8FCFD964233778C850B9E"
@@ -3906,7 +3906,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawPDF.Utilities, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawPDF.Utilities, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_DCCF00C355D74A8C8AB86960864D8F65"
@@ -4179,7 +4179,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:clawSoft.ftplib, Version=0.9.3.0, Culture=neutral, PublicKeyToken=568eec0b104690a6, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:clawSoft.ftplib, Version=0.9.3.0, Culture=neutral, PublicKeyToken=de2a2304328baa85, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_F15FEBE427C25BAFD3D87D6813232635"

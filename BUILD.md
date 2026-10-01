@@ -34,6 +34,12 @@ Studio 2022 os projetos C++ continuam usando o v143 automaticamente.
 
 ## Observações
 
+- **Assinatura (strong name):** o projeto original assinava os assemblies com
+  `signClawPDF.pfx`, um certificado privado do autor que não está no repositório.
+  Neste fork todos os projetos usam a chave `src/clawPDF.snk` (gerada para o fork,
+  sem senha), e as chaves públicas dos `InternalsVisibleTo` foram atualizadas.
+  Os binários deste fork não têm a mesma identidade dos binários oficiais.
+
 - O instalador agora exige o .NET Framework 4.8 (já presente no Windows 10 1903+,
   Windows 11 e Windows Server 2022; disponível para Windows Server 2016/2019).
 - Os binários do port monitor (`src/lib/clawmon`) e do Ghostscript

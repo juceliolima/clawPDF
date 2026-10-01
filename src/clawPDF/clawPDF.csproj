@@ -60,7 +60,7 @@
     <ApplicationIcon>clawPDF.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>signClawPDF.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\clawPDF.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -348,7 +348,6 @@
     <None Include="languages\English.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="signClawPDF.pfx" />
     <Content Include="docs\licenses\MIT License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
