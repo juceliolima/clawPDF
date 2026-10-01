@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -7,6 +9,8 @@ using System.Windows.Interop;
 using clawSoft.clawPDF.Core.Jobs;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Shared.Helper;
+using clawSoft.clawPDF.Shared.ViewModels;
+using clawSoft.clawPDF.Shared.Views;
 using clawSoft.clawPDF.ViewModels;
 using clawSoft.clawPDF.Workflow;
 using NLog;
@@ -55,6 +59,29 @@ namespace clawSoft.clawPDF.Views
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
                     "SaveToolTip", "Save the selected print job now, using the default profile");
             UpdatePreviewButton();
+
+            ((ManagePrintJobsViewModel)DataContext).ConfirmMergeOfDifferentPrinters = ConfirmMergeOfDifferentPrinters;
+        }
+
+        /// <summary>
+        ///     Confirmation before "Merge All" joins documents that were printed on different printers
+        /// </summary>
+        private bool ConfirmMergeOfDifferentPrinters(IList<string> printers)
+        {
+            var translator = TranslationHelper.Instance.TranslatorInstance;
+            var names = string.Join(Environment.NewLine,
+                printers.Select(p => "   \u2022 " + (string.IsNullOrEmpty(p) ? "?" : p)));
+
+            var message = translator.GetTranslation("ManagePrintJobsWindow", "MergeDifferentPrintersMessage",
+                              "The print jobs come from different printers:") +
+                          Environment.NewLine + names + Environment.NewLine + Environment.NewLine +
+                          translator.GetTranslation("ManagePrintJobsWindow", "MergeDifferentPrintersQuestion",
+                              "Do you really want to merge all of them into one document?");
+            var caption = translator.GetTranslation("ManagePrintJobsWindow", "MergeDifferentPrintersCaption",
+                "Merge All");
+
+            return MessageWindow.ShowTopMost(message, caption, MessageWindowButtons.YesNo,
+                       MessageWindowIcon.Question) == MessageWindowResponse.Yes;
         }
 
         private void OnDragEnter(object sender, DragEventArgs e)

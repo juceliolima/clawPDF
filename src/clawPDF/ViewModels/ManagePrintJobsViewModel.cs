@@ -183,8 +183,23 @@ namespace clawSoft.clawPDF.ViewModels
             return jobInfo.SourceFiles[0].PrinterName ?? "";
         }
 
+        /// <summary>
+        ///     Asked before "Merge All" joins jobs of different printers. Receives the printer names;
+        ///     returns true to merge anyway. If not set, the jobs are merged without asking.
+        /// </summary>
+        public Func<IList<string>, bool> ConfirmMergeOfDifferentPrinters { get; set; }
+
         private void ExecuteMergeAllJobs(object o)
         {
+            var printers = _jobInfos
+                .Select(PrinterOf)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (printers.Count > 1 && ConfirmMergeOfDifferentPrinters != null &&
+                !ConfirmMergeOfDifferentPrinters(printers))
+                return;
+
             ExecuteMergeJobs(_jobInfos);
         }
 
