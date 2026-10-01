@@ -87,6 +87,7 @@
       <DependentUpon>CoreResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Ghostscript\GhostscriptCall.cs" />
+    <Compile Include="Ghostscript\PreviewRenderer.cs" />
     <Compile Include="Ghostscript\GhostscriptAPI.cs" />
     <Compile Include="Ghostscript\OutputDevices\OCRDevice.cs" />
     <Compile Include="Ghostscript\OutputDevices\DocxDevice.cs" />
