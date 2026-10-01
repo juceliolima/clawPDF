@@ -58,13 +58,13 @@
                 <Button  Name="MoveUpButton" Padding="5" Command="{Binding MoveUpCommand}"
                         CommandParameter="{Binding ElementName=JobList, Path=SelectedItems}">
                     <Viewbox Height="8">
-                        <Path Data="{StaticResource UpArrow}" Fill="Black" />
+                        <Path Data="{StaticResource UpArrow}" Fill="{StaticResource ControlDefaultForeground}" />
                     </Viewbox>
                 </Button>
                 <Button Name="MoveDownButton" Padding="5" Command="{Binding MoveDownCommand}"
                         CommandParameter="{Binding ElementName=JobList, Path=SelectedItems}">
                     <Viewbox Height="8">
-                        <Path Data="{StaticResource DownArrow}" Fill="Black" />
+                        <Path Data="{StaticResource DownArrow}" Fill="{StaticResource ControlDefaultForeground}" />
                     </Viewbox>
                 </Button>
             </StackPanel>

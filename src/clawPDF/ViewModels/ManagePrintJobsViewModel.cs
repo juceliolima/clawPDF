@@ -223,6 +223,9 @@ namespace clawSoft.clawPDF.ViewModels
             var oldIndex = _jobInfos.IndexOf(jobInfo);
             _jobInfos.Move(oldIndex, oldIndex + positionDifference);
 
+            // keep the real processing order in sync with the list (before only the list was reordered)
+            _jobInfoQueue.Reorder(_jobInfos.ToList());
+
             JobInfos.MoveCurrentToPosition(oldIndex + positionDifference);
         }
     }

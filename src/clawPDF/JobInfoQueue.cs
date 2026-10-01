@@ -134,6 +134,26 @@ namespace clawSoft.clawPDF
         }
 
         /// <summary>
+        ///     Puts the queue in the given order (used by Manage Print Jobs). Jobs that are not in the
+        ///     list keep their relative order and are placed after the listed ones.
+        /// </summary>
+        /// <param name="order">The jobs in the desired processing order</param>
+        public void Reorder(IList<IJobInfo> order)
+        {
+            if (order == null)
+                return;
+
+            var ordered = order.Where(j => j != null && JobInfos.Contains(j)).Distinct().ToList();
+            var rest = JobInfos.Where(j => !ordered.Contains(j)).ToList();
+
+            JobInfos.Clear();
+            foreach (var jobInfo in ordered.Concat(rest))
+                JobInfos.Add(jobInfo);
+
+            _logger.Debug("Print job queue reordered");
+        }
+
+        /// <summary>
         ///     Moves a JobInfo to the first position, so it is the next job to be processed
         /// </summary>
         /// <param name="jobInfo">The JobInfo to move</param>

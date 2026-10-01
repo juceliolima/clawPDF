@@ -59,9 +59,8 @@ namespace clawSoft.clawPDF.Views
 
         private void JobList_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var vm = (ManagePrintJobsViewModel)DataContext;
-            vm.DeleteJobCommand.RaiseCanExecuteChanged();
-            vm.MergeJobsCommand.RaiseCanExecuteChanged();
+            // re-evaluates all commands, including the up/down arrows (they stayed disabled before)
+            ((ManagePrintJobsViewModel)DataContext).RaiseRefreshView();
             UpdatePreviewButton();
         }
 

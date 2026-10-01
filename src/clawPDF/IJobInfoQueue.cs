@@ -50,6 +50,13 @@ namespace clawSoft.clawPDF
         void Add(IJobInfo jobInfo);
 
         /// <summary>
+        ///     Puts the queue in the given order (used by Manage Print Jobs). Jobs that are not in the
+        ///     list keep their relative order and are placed after the listed ones.
+        /// </summary>
+        /// <param name="order">The jobs in the desired processing order</param>
+        void Reorder(IList<IJobInfo> order);
+
+        /// <summary>
         ///     Removes a JobInfo from the Queue
         /// </summary>
         /// <param name="jobInfo">The JobInfo to remove</param>
