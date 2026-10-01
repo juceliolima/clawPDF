@@ -93,7 +93,13 @@ namespace clawSoft.clawPDF.Shared.Helper
             form.TopMost =
                 !revertWhenActive; //directly deactivate topmost -> dialog should stay in foreground but is not locked there
 
-            var result = saveFileDialog.ShowDialog(form);
+            // remember position/size of the "Save as" dialog between calls
+            DialogResult result;
+            using (new FileDialogPlacementTracker("SaveFileDialog"))
+            {
+                result = saveFileDialog.ShowDialog(form);
+            }
+
             return result;
         }
 

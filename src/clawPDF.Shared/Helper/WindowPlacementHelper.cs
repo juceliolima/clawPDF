@@ -18,7 +18,7 @@ namespace clawSoft.clawPDF.Shared.Helper
     /// </remarks>
     public static class WindowPlacementHelper
     {
-        private const string RegistryPath = @"Software\clawSoft\clawPDF\WindowPlacement";
+        internal const string RegistryPath = @"Software\clawSoft\clawPDF\WindowPlacement";
 
         /// <summary>Minimum part of the title bar (in pixels) that must be on a screen to accept a saved position</summary>
         private const int MinVisibleWidth = 60;
