@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModels="clr-namespace:clawSoft.clawPDF.ViewModels"
         Title="Manage Print Jobs"
-        Height="319" Width="623"
+        Height="319" Width="720"
         WindowStartupLocation="CenterScreen"
         Loaded="OnLoaded"
         AllowDrop="True"
@@ -42,10 +42,13 @@
                         CommandParameter="{Binding ElementName=JobList, Path=SelectedItems}">
                     Merge
                 </Button>
-                <Button Margin="10 10 5 10" Name="MergeAllButton" Padding="5" Command="{Binding MergeAllJobsCommand}"
+                <Button Margin="10 10 0 10" Name="MergeAllButton" Padding="5" Command="{Binding MergeAllJobsCommand}"
                         CommandParameter="{Binding ElementName=JobList, Path=SelectedItems}">
                     Merge All
                 </Button>
+                <!-- split button: merge only the jobs of one printer -->
+                <Button Margin="1 10 5 10" Name="MergeByPrinterButton" Padding="4 5" MinWidth="0"
+                        Click="MergeByPrinterButton_OnClick" Content="&#x25BE;" />
                 <Button Margin="10 10 5 10" Name="DeleteButton" Padding="5" Command="{Binding DeleteJobCommand}"
                         CommandParameter="{Binding SelectedItems, ElementName=JobList}" Content="Delete" />
                 <Button Margin="10 10 5 10" Name="PreviewButton" Padding="5" Click="PreviewButton_OnClick"
@@ -81,6 +84,8 @@
                                         DisplayMemberBinding="{Binding Metadata.PrintJobName}" />
                         <GridViewColumn Header="Files" Width="60" DisplayMemberBinding="{Binding SourceFiles.Count}" />
                         <GridViewColumn Header="Pages" Width="60" DisplayMemberBinding="{Binding TotalPages}" />
+                        <GridViewColumn Header="Printer" Width="150"
+                                        DisplayMemberBinding="{Binding SourceFiles[0].PrinterName}" />
                     </GridView>
                 </ListView.View>
             </ListView>

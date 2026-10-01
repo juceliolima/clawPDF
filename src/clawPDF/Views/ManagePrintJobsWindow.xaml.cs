@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
 using clawSoft.clawPDF.Core.Jobs;
@@ -15,6 +16,9 @@ namespace clawSoft.clawPDF.Views
     internal partial class ManagePrintJobsWindow : Window
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
+        /// <summary>Drop-down of the "Merge All" split button (one entry per printer)</summary>
+        private readonly ContextMenu _mergeByPrinterMenu = new ContextMenu();
 
         public ManagePrintJobsWindow()
         {
@@ -38,6 +42,12 @@ namespace clawSoft.clawPDF.Views
             view.Columns[2].Header =
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow", "PagesColoumn",
                     "Pages");
+            view.Columns[3].Header =
+                TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow", "PrinterColoumn",
+                    "Printer");
+            MergeByPrinterButton.ToolTip =
+                TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
+                    "MergeByPrinterToolTip", "Merge all jobs of one printer");
             PreviewButton.ToolTip =
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
                     "PreviewToolTip", "Preview the selected print job (double click / Enter)");
@@ -105,6 +115,51 @@ namespace clawSoft.clawPDF.Views
 
             DirectSaveRequest.Set(jobInfo);
             Close();
+        }
+
+        /// <summary>
+        ///     Opens the drop-down of the "Merge All" split button with one entry per printer
+        /// </summary>
+        private void MergeByPrinterButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = (ManagePrintJobsViewModel)DataContext;
+            var format = TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
+                "MergeFromPrinter", "Merge from {0} ({1})");
+
+            _mergeByPrinterMenu.Items.Clear();
+            foreach (var printer in vm.GetPrintersWithJobCount())
+            {
+                var printerName = printer.Key;
+                var name = string.IsNullOrEmpty(printerName) ? "?" : printerName;
+                string header;
+                try
+                {
+                    header = string.Format(format, name, printer.Value);
+                }
+                catch (FormatException)
+                {
+                    header = name + " (" + printer.Value + ")";
+                }
+
+                var item = new MenuItem
+                {
+                    Header = header,
+                    IsEnabled = printer.Value > 1 // merging needs at least two jobs
+                };
+                item.Click += (s, args) =>
+                {
+                    vm.MergeJobsOfPrinter(printerName);
+                    UpdatePreviewButton();
+                };
+                _mergeByPrinterMenu.Items.Add(item);
+            }
+
+            if (_mergeByPrinterMenu.Items.Count == 0)
+                return;
+
+            _mergeByPrinterMenu.PlacementTarget = MergeAllButton;
+            _mergeByPrinterMenu.Placement = PlacementMode.Bottom;
+            _mergeByPrinterMenu.IsOpen = true;
         }
 
         private void ShowPreview(IJobInfo jobInfo)
