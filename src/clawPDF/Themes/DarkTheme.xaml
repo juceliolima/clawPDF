@@ -21,6 +21,7 @@
     <SolidColorBrush x:Key="ControlDisabledBackground" Color="#FF424242" />
     <SolidColorBrush x:Key="ControlDisabledBorderBrush" Color="#FF464646" />
     <SolidColorBrush x:Key="ControlMouseOverBackground" Color="#FF3F3F3F" />
+    <SolidColorBrush x:Key="ControlPrimaryMouseOverBackground" Color="#FF3F3F3F" />
     <SolidColorBrush x:Key="ControlMouseOverBorderBrush" Color="#FF414141" />
     <SolidColorBrush x:Key="ControlSelectedBackground" Color="#FF323232" />
     <SolidColorBrush x:Key="ControlSelectedBorderBrush" Color="#FF373737" />
@@ -359,6 +360,18 @@
 
     <!-- -_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_- -->
 
+    <Style x:Key="OptionMarkFocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle Margin="14,0,0,0" SnapsToDevicePixels="true"
+                               Stroke="{StaticResource ControlDefaultForeground}"
+                               StrokeThickness="1" StrokeDashArray="1 2" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- CheckBox -->
     <Style TargetType="{x:Type CheckBox}">
         <Setter Property="MinHeight" Value="16" />
@@ -428,18 +441,6 @@
                             <Setter Property="Opacity" TargetName="indeterminateMark" Value="1" />
                         </Trigger>
                     </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style x:Key="OptionMarkFocusVisual">
-        <Setter Property="Control.Template">
-            <Setter.Value>
-                <ControlTemplate>
-                    <Rectangle Margin="14,0,0,0" SnapsToDevicePixels="true"
-                               Stroke="{StaticResource ControlDefaultForeground}"
-                               StrokeThickness="1" StrokeDashArray="1 2" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -4473,15 +4474,15 @@
                     <Grid>
                         <Rectangle
                             x:Name="Border"
-                            Fill="{DynamicResource ControlDefaultBackgroundBrush}"
+                            Fill="{DynamicResource ControlDefaultBackground}"
                             SnapsToDevicePixels="True"
-                            Stroke="{DynamicResource ControlBrightBorderBrush}" />
+                            Stroke="{DynamicResource ControlBrightDefaultBorderBrush}" />
                         <Polygon
                             x:Name="Arrow"
                             Margin="8,8,3,3"
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"
-                            Fill="{DynamicResource ControlGlythBrush}"
+                            Fill="{DynamicResource ControlGlythColour}"
                             Opacity="0.15"
                             Points="0,10 10,10 10,0"
                             Stretch="Uniform" />
@@ -4491,14 +4492,14 @@
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="(Shape.Fill)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlMouseOverBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlMouseOverBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Border" Storyboard.TargetProperty="(Shape.Fill)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlSelectedBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlSelectedBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4630,7 +4631,7 @@
                                 <VisualState x:Name="Disabled">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4671,7 +4672,7 @@
                                 <VisualState x:Name="Current">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="border" Storyboard.TargetProperty="(Border.BorderBrush)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ContainerBorderBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ContainerBorder}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4741,7 +4742,7 @@
                                 <VisualState x:Name="Normal_AlternatingRow">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DGR_Border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4756,7 +4757,7 @@
                                 <VisualState x:Name="Normal_Selected">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DGR_Border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4764,7 +4765,7 @@
                                 <VisualState x:Name="Unfocused_Selected">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DGR_Border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4772,7 +4773,7 @@
                                 <VisualState x:Name="Normal_Editing">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DGR_Border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4780,7 +4781,7 @@
                                 <VisualState x:Name="MouseOver_Editing">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DGR_Border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4788,7 +4789,7 @@
                                 <VisualState x:Name="MouseOver_Unfocused_Editing">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DGR_Border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4796,7 +4797,7 @@
                                 <VisualState x:Name="Unfocused_Editing">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DGR_Border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlDefaultBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4804,7 +4805,7 @@
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DGR_Border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlMouseOverBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlMouseOverBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4818,7 +4819,7 @@
                                 <VisualState x:Name="MouseOver_Selected">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DGR_Border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlMouseOverBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlMouseOverBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4826,7 +4827,7 @@
                                 <VisualState x:Name="MouseOver_Unfocused_Selected">
                                     <Storyboard>
                                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DGR_Border" Storyboard.TargetProperty="(Panel.Background)">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlMouseOverBackgroundBrush}" />
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{DynamicResource ControlMouseOverBackground}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -4861,8 +4862,8 @@
                         <Border
                             x:Name="rowHeaderBorder"
                             Width="10"
-                            Background="{DynamicResource ControlDefaultBackgroundBrush}"
-                            BorderBrush="{DynamicResource ControlBrightBorderBrush}"
+                            Background="{DynamicResource ControlDefaultBackground}"
+                            BorderBrush="{DynamicResource ControlBrightDefaultBorderBrush}"
                             BorderThickness="1">
                             <StackPanel Orientation="Horizontal">
                                 <ContentPresenter VerticalAlignment="Center" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
@@ -4906,9 +4907,9 @@
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Background" Value="{DynamicResource ControlLightBackgroundBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ControlBrightDefaultBackground}" />
         <Setter Property="BorderBrush" Value="{DynamicResource ControlDefaultBorderBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource ControlDefaultForegroundBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource ControlDefaultForeground}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
@@ -4938,7 +4939,7 @@
                             HorizontalAlignment="Right"
                             VerticalAlignment="Center"
                             Data="M0,0 L1,0 0.5,1 z"
-                            Fill="{DynamicResource ControlDefaultForegroundBrush}"
+                            Fill="{DynamicResource ControlDefaultForeground}"
                             Opacity="0.5"
                             RenderTransformOrigin="0.5,0.4"
                             Stretch="Fill"
@@ -4965,7 +4966,7 @@
                             <Setter TargetName="SortArrow" Property="Visibility" Value="Visible" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="BackgroundBorder" Property="Background" Value="{DynamicResource ControlMouseOverBackgroundBrush}" />
+                            <Setter TargetName="BackgroundBorder" Property="Background" Value="{DynamicResource ControlMouseOverBackground}" />
                             <Setter TargetName="BackgroundBorder" Property="BorderBrush" Value="{DynamicResource ControlMouseOverBorderBrush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
