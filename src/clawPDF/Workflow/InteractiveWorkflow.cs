@@ -49,37 +49,72 @@ namespace clawSoft.clawPDF.Workflow
 
         protected override void QueryTargetFile()
         {
-            if (!Job.Profile.SkipPrintDialog)
+            // The print job window is shown again when the user cancels the "Save as" dialog,
+            // so the job is not lost. The same view model is reused to keep title, profile etc.
+            var showPrintDialog = !Job.Profile.SkipPrintDialog;
+            var initialSkipSaveFileDialog = Job.SkipSaveFileDialog;
+            var initialWorkflowStep = WorkflowStep;
+            PrintJobViewModel model = null;
+
+            while (true)
             {
-                Job.ApplyMetadata();
-                var w = new PrintJobWindow();
-                var model = new PrintJobViewModel(Job.JobInfo, Job.Profile);
-                w.DataContext = model;
-                bool revertTopMost = true;
-                if (Settings.ApplicationSettings.PrinterDialogTopMost) revertTopMost = false;
-
-                if (TopMostHelper.ShowDialogTopMost(w, revertTopMost) != true || model.PrintJobAction == PrintJobAction.Cancel)
+                if (showPrintDialog)
                 {
-                    Cancel = true;
-                    WorkflowStep = WorkflowStep.AbortedByUser;
-                    return;
+                    if (model == null)
+                    {
+                        Job.ApplyMetadata();
+                        model = new PrintJobViewModel(Job.JobInfo, Job.Profile);
+                    }
+
+                    var w = new PrintJobWindow();
+                    w.DataContext = model;
+                    bool revertTopMost = true;
+                    if (Settings.ApplicationSettings.PrinterDialogTopMost) revertTopMost = false;
+
+                    if (TopMostHelper.ShowDialogTopMost(w, revertTopMost) != true || model.PrintJobAction == PrintJobAction.Cancel)
+                    {
+                        Cancel = true;
+                        WorkflowStep = WorkflowStep.AbortedByUser;
+                        return;
+                    }
+
+                    if (model.PrintJobAction == PrintJobAction.ManagePrintJobs)
+                        throw new ManagePrintJobsException();
+
+                    Job.Profile = model.SelectedProfile.Copy();
+                    Job.ApplyMetadata();
+                    Job.SkipSaveFileDialog = initialSkipSaveFileDialog;
+
+                    if (model.PrintJobAction == PrintJobAction.EMail)
+                    {
+                        Job.SkipSaveFileDialog = true;
+                        Job.Profile.EmailClient.Enabled = true;
+                        Job.Profile.AutoSave.Enabled = false;
+                        Job.Profile.OpenViewer = false;
+                    }
                 }
 
-                if (model.PrintJobAction == PrintJobAction.ManagePrintJobs)
-                    throw new ManagePrintJobsException();
+                QueryOutputLocation();
 
-                Job.Profile = model.SelectedProfile.Copy();
-                Job.ApplyMetadata();
-
-                if (model.PrintJobAction == PrintJobAction.EMail)
+                if (Cancel && showPrintDialog && WorkflowStep == WorkflowStep.AbortedByUser)
                 {
-                    Job.SkipSaveFileDialog = true;
-                    Job.Profile.EmailClient.Enabled = true;
-                    Job.Profile.AutoSave.Enabled = false;
-                    Job.Profile.OpenViewer = false;
+                    // "Save as" was cancelled: back to the print job window
+                    Logger.Info("Save dialog cancelled, showing the print job window again.");
+                    Cancel = false;
+                    WorkflowStep = initialWorkflowStep;
+                    continue;
                 }
+
+                return;
             }
+        }
 
+        /// <summary>
+        ///     Determines the output file: e-mail temp folder, auto-save folder or "Save as" dialog.
+        ///     Sets Cancel when the user cancels the "Save as" dialog.
+        /// </summary>
+        private void QueryOutputLocation()
+        {
             if (Job.SkipSaveFileDialog)
             {
                 ITempFolderProvider tempFolderProvider = JobInfoQueue.Instance;
