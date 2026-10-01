@@ -15,6 +15,7 @@ namespace clawSoft.clawPDF.Views
         public AboutWindow()
         {
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
             rt_license.IsReadOnly = true;
             rt_license.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
             rt_license.Selection.Text =

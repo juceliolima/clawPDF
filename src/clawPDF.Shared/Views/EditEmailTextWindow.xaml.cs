@@ -16,6 +16,7 @@ namespace clawSoft.clawPDF.Shared.Views
             AddSignature = addSignature;
 
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
 
             TranslationHelper.Instance.TranslatorInstance.Translate(this);
 

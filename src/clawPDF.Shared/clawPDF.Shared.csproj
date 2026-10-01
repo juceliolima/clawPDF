@@ -108,6 +108,7 @@
     <Compile Include="Helper\PrinterHelper.cs" />
     <Compile Include="Helper\TopMostHelper.cs" />
     <Compile Include="Helper\TranslationHelper.cs" />
+    <Compile Include="Helper\WindowPlacementHelper.cs" />
     <Compile Include="Assistants\UacAssistant.cs" />
     <Compile Include="Helper\VersionHelper.cs" />
     <Compile Include="Helper\TerminalServerDetection.cs" />

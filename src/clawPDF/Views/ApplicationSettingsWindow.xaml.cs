@@ -14,6 +14,7 @@ namespace clawSoft.clawPDF.Views
         public ApplicationSettingsWindow()
         {
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
         }
 
         public ApplicationSettingsWindow(ApplicationSettings applicationSettings,

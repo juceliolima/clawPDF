@@ -25,6 +25,7 @@ namespace clawSoft.clawPDF.Views
         public ProfileSettingsWindow(clawPDFSettings settings)
         {
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
             ViewModel = CreateViewModel(settings);
 
             ViewModel.ConversionProfilesView.CurrentChanged += OnConversionProfilesViewOnCurrentChanged;

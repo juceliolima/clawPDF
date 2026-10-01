@@ -18,6 +18,7 @@ namespace clawSoft.clawPDF.Views
         public ManagePrintJobsWindow()
         {
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

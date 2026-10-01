@@ -20,6 +20,7 @@ namespace clawSoft.clawPDF.Shared.Views
         public MessageWindow(string message, string caption, MessageWindowButtons buttons, MessageWindowIcon icon)
         {
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
             MessageText.Text = message;
             Title = caption;
             SetButtons(buttons);

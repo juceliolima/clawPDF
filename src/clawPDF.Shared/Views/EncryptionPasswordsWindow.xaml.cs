@@ -16,6 +16,7 @@ namespace clawSoft.clawPDF.Shared.Views
                 MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
 
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
 
             switch (middleButton)
             {

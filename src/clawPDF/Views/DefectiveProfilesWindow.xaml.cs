@@ -18,6 +18,7 @@ namespace clawSoft.clawPDF.Views
         public DefectiveProfilesWindow()
         {
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
         }
 
         private DefectiveProfilesWindow(ActionResultDict actionResultDict)

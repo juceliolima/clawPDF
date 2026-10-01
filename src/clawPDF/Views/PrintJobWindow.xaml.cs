@@ -27,6 +27,7 @@ namespace clawSoft.clawPDF.Views
         public PrintJobWindow()
         {
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
             TabColor = PasswordTab.Background;
             vm = new PrintJobViewModel();
             DataContext = vm;

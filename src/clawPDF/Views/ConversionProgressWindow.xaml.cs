@@ -2,6 +2,7 @@
 using System.Timers;
 using System.Windows;
 using clawSoft.clawPDF.Core.Jobs;
+using clawSoft.clawPDF.Shared.Helper;
 
 namespace clawSoft.clawPDF.Views
 {
@@ -12,6 +13,7 @@ namespace clawSoft.clawPDF.Views
         public ConversionProgressWindow()
         {
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
         }
 
         public void ApplyJob(IJob job)

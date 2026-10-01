@@ -53,6 +53,7 @@ namespace clawSoft.clawPDF.Views
         {
             _jobInfo = jobInfo ?? throw new ArgumentNullException(nameof(jobInfo));
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
             PagesItems.ItemsSource = _pages;
         }
 

@@ -11,6 +11,7 @@ namespace clawSoft.clawPDF.Shared.Views
         public InputBoxWindow()
         {
             InitializeComponent();
+            WindowPlacementHelper.Attach(this);
         }
 
         public Func<string, InputBoxValidation> IsValidInput { get; set; }
