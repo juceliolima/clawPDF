@@ -1,0 +1,133 @@
+<Window x:Class="clawSoft.clawPDF.Views.PrintJobPreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="clawPDF - Print Preview"
+        Height="760" Width="900"
+        MinHeight="400" MinWidth="560"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False"
+        Loaded="OnLoaded"
+        Closed="OnClosed"
+        PreviewKeyDown="OnPreviewKeyDown"
+        Background="{StaticResource ContainerBackground}"
+        Icon="../clawPDF.ico"
+        x:ClassModifier="internal">
+    <Window.Resources>
+        <Style x:Key="ToolButton" TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="MinWidth" Value="32" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Padding" Value="6 0" />
+            <Setter Property="Margin" Value="2 0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Focusable" Value="False" />
+        </Style>
+        <Style x:Key="ToolSeparator" TargetType="{x:Type Border}">
+            <Setter Property="Width" Value="1" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="Margin" Value="8 0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="{StaticResource WindowBorderColour}" />
+        </Style>
+    </Window.Resources>
+
+    <DockPanel>
+        <!-- Toolbar -->
+        <Border DockPanel.Dock="Top" BorderThickness="0 0 0 1" BorderBrush="{StaticResource WindowBorderColour}"
+                Padding="8 6">
+            <WrapPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- Navigation -->
+                <Button Name="PreviousPageButton" Style="{StaticResource ToolButton}" Content="&#x25C0;"
+                        Click="PreviousPageButton_Click" />
+                <TextBox Name="PageNumberText" Width="44" Height="24" VerticalAlignment="Center"
+                         VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                         Background="{StaticResource ContainerBackground}"
+                         Foreground="{StaticResource ControlDefaultForeground}"
+                         KeyDown="PageNumberText_KeyDown" LostFocus="PageNumberText_LostFocus" />
+                <TextBlock Name="PageCountText" Margin="6 0" VerticalAlignment="Center" MinWidth="40"
+                           Foreground="{StaticResource ControlDefaultForeground}" Text="/ 0" />
+                <Button Name="NextPageButton" Style="{StaticResource ToolButton}" Content="&#x25B6;"
+                        Click="NextPageButton_Click" />
+
+                <Border Style="{StaticResource ToolSeparator}" />
+
+                <!-- Zoom -->
+                <Button Name="ZoomOutButton" Style="{StaticResource ToolButton}" Content="&#x2212;"
+                        FontWeight="Bold" Click="ZoomOutButton_Click" />
+                <TextBlock Name="ZoomText" Width="48" TextAlignment="Center" VerticalAlignment="Center"
+                           Foreground="{StaticResource ControlDefaultForeground}" Text="100%" />
+                <Button Name="ZoomInButton" Style="{StaticResource ToolButton}" Content="+"
+                        FontWeight="Bold" Click="ZoomInButton_Click" />
+                <Button Name="FitWidthButton" Style="{StaticResource ToolButton}" Content="Fit width"
+                        Click="FitWidthButton_Click" />
+                <Button Name="FitPageButton" Style="{StaticResource ToolButton}" Content="Whole page"
+                        Click="FitPageButton_Click" />
+                <Button Name="ActualSizeButton" Style="{StaticResource ToolButton}" Content="100%"
+                        Click="ActualSizeButton_Click" />
+
+                <Border Style="{StaticResource ToolSeparator}" />
+
+                <!-- Rotation (view only) -->
+                <Button Name="RotateLeftButton" Style="{StaticResource ToolButton}" Content="&#x21BA;"
+                        FontSize="15" Click="RotateLeftButton_Click" />
+                <Button Name="RotateRightButton" Style="{StaticResource ToolButton}" Content="&#x21BB;"
+                        FontSize="15" Click="RotateRightButton_Click" />
+                <CheckBox Name="RotateAllCheckBox" Margin="6 0 0 0" VerticalAlignment="Center"
+                          Foreground="{StaticResource ControlDefaultForeground}" Focusable="False"
+                          Content="All pages" />
+            </WrapPanel>
+        </Border>
+
+        <!-- Status bar -->
+        <Border DockPanel.Dock="Bottom" BorderThickness="0 1 0 0" BorderBrush="{StaticResource WindowBorderColour}"
+                Padding="10 4">
+            <DockPanel>
+                <Button Name="CloseButton" DockPanel.Dock="Right" Padding="12 3" IsCancel="True"
+                        Content="Close" Click="CloseButton_Click" />
+                <ProgressBar Name="BusyProgress" DockPanel.Dock="Right" Width="120" Height="12" Margin="10 0"
+                             IsIndeterminate="True" VerticalAlignment="Center" />
+                <TextBlock Name="StatusText" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"
+                           Foreground="{StaticResource ControlDefaultForeground}" />
+            </DockPanel>
+        </Border>
+
+        <!-- Pages -->
+        <Grid Background="{StaticResource WindowBorderColour}">
+            <ScrollViewer Name="PageScroller" HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Auto" Focusable="True"
+                          ScrollChanged="PageScroller_ScrollChanged"
+                          PreviewMouseWheel="PageScroller_PreviewMouseWheel"
+                          PreviewMouseLeftButtonDown="PageScroller_PreviewMouseLeftButtonDown"
+                          SizeChanged="PageScroller_SizeChanged">
+                <ItemsControl Name="PagesItems" HorizontalAlignment="Center" Margin="0 10">
+                    <ItemsControl.LayoutTransform>
+                        <ScaleTransform x:Name="ZoomTransform" ScaleX="1" ScaleY="1" />
+                    </ItemsControl.LayoutTransform>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0 0 0 12" HorizontalAlignment="Center">
+                                <Grid.LayoutTransform>
+                                    <RotateTransform Angle="{Binding Rotation}" />
+                                </Grid.LayoutTransform>
+                                <Border Background="White" BorderBrush="#FF9A9A9A" BorderThickness="1"
+                                        Width="{Binding DisplayWidth}" Height="{Binding DisplayHeight}"
+                                        SnapsToDevicePixels="True">
+                                    <Image Source="{Binding Image}" Stretch="Fill"
+                                           RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <TextBlock Name="MessageText" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       TextWrapping="Wrap" TextAlignment="Center" MaxWidth="480" FontSize="14"
+                       Foreground="{StaticResource ControlDefaultForeground}" Visibility="Collapsed" />
+        </Grid>
+    </DockPanel>
+</Window>

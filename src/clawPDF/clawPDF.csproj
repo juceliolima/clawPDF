@@ -253,6 +253,9 @@
     <Compile Include="Views\ManagePrintJobsWindow.xaml.cs">
       <DependentUpon>ManagePrintJobsWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PrintJobPreviewWindow.xaml.cs">
+      <DependentUpon>PrintJobPreviewWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PrintJobWindow.xaml.cs">
       <DependentUpon>PrintJobWindow.xaml</DependentUpon>
     </Compile>
@@ -506,6 +509,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ManagePrintJobsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PrintJobPreviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
