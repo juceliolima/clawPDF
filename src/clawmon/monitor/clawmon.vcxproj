@@ -393,6 +393,19 @@
     <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <!--
+    The installer (clawPDF_setup) needs the port monitor for Win32, x64 and ARM64.
+    A Release|x64 build (used by the "Release|Any CPU" solution configuration) also builds
+    the other two platforms, so one solution build is enough to create the .msi.
+    Requires the MSVC ARM64 build tools (Visual Studio Installer).
+  -->
+  <Target Name="ClawBuildOtherPlatforms" AfterTargets="Build"
+          Condition="'$(Configuration)' == 'Release' And '$(Platform)' == 'x64' And '$(ClawNestedPlatformBuild)' != 'true'">
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Build" ContinueOnError="WarnAndContinue"
+             Properties="Configuration=$(Configuration);Platform=Win32;SolutionDir=$(SolutionDir);ClawNestedPlatformBuild=true" />
+    <MSBuild Projects="$(MSBuildProjectFullPath)" Targets="Build" ContinueOnError="WarnAndContinue"
+             Properties="Configuration=$(Configuration);Platform=ARM64;SolutionDir=$(SolutionDir);ClawNestedPlatformBuild=true" />
+  </Target>
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>

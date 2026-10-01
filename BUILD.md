@@ -13,7 +13,8 @@ Studio 2022 os projetos C++ continuam usando o v143 automaticamente.
 **Componentes individuais**
 - Pacote de direcionamento do .NET Framework 4.8 (*.NET Framework 4.8 targeting pack*)
 - MSVC v145 – Ferramentas de build x64/x86 (mais recente)
-- MSVC v145 – Ferramentas de build ARM64 (só se for compilar o clawmon para ARM64)
+- MSVC v145 – Ferramentas de build ARM64 (necessário para gerar o instalador: o port monitor
+  é compilado para Win32, x64 e ARM64)
 - Windows 11 SDK (qualquer versão recente)
 
 **Extensão** (Extensões → Gerenciar Extensões)
@@ -30,7 +31,9 @@ Studio 2022 os projetos C++ continuam usando o v143 automaticamente.
    *Compilar → Recompilar Solução*. Os pacotes NuGet (NLog, iText7, PdfToSvg.NET)
    são restaurados automaticamente.
 4. A saída fica em `src/_Build/Release`.
-5. Para gerar o instalador, clique com o botão direito em `clawPDF_setup` → *Build*.
+5. Em **Release | Any CPU** o instalador é gerado junto: o port monitor (`clawmon`/`clawmonui`)
+   é compilado automaticamente para Win32, x64 e ARM64 e depois o `clawPDF_setup` empacota tudo.
+   O resultado fica em `src/clawPDF_setup/Release/` (`clawPDF_setup.msi` e `setup.exe`).
 
 ## Observações
 
@@ -42,5 +45,6 @@ Studio 2022 os projetos C++ continuam usando o v143 automaticamente.
 
 - O instalador agora exige o .NET Framework 4.8 (já presente no Windows 10 1903+,
   Windows 11 e Windows Server 2022; disponível para Windows Server 2016/2019).
-- Os binários do port monitor (`src/lib/clawmon`) e do Ghostscript
-  (`src/clawPDF/gsdll*.dll`) já vêm prontos no repositório.
+- O Ghostscript (`src/clawPDF/gsdll*.dll`) e os arquivos do driver PostScript
+  (`src/lib/clawmon`) já vêm prontos no repositório; o port monitor
+  (`clawmon.dll` / `clawmonui.dll`) é compilado a partir de `src/clawmon`.
