@@ -266,6 +266,7 @@
     <Compile Include="Workflow\AutoSaveWorkflow.cs" />
     <Compile Include="Workflow\ComWorkflow.cs" />
     <Compile Include="Workflow\ConversionWorkflow.cs" />
+    <Compile Include="Workflow\DirectSaveRequest.cs" />
     <Compile Include="Workflow\InteractiveWorkflow.cs" />
     <Compile Include="JobInfoQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

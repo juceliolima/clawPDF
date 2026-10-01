@@ -50,6 +50,8 @@
                         CommandParameter="{Binding SelectedItems, ElementName=JobList}" Content="Delete" />
                 <Button Margin="10 10 5 10" Name="PreviewButton" Padding="5" Click="PreviewButton_OnClick"
                         Content="Preview" />
+                <Button Margin="10 10 5 10" Name="SaveButton" Padding="5" Click="SaveButton_OnClick"
+                        Content="Save" />
                 <Button Margin="10 10 5 10" Name="ContinueButton" Padding="5" IsCancel="True" Content="Continue" />
             </StackPanel>
             <StackPanel VerticalAlignment="Center" Margin="0 0 5 0">

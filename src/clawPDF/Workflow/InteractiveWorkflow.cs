@@ -56,6 +56,15 @@ namespace clawSoft.clawPDF.Workflow
             var initialWorkflowStep = WorkflowStep;
             PrintJobViewModel model = null;
 
+            // "Save" in the Manage Print Jobs window: go straight to the "Save as" dialog
+            var directSave = DirectSaveRequest.Consume(Job.JobInfo);
+            if (directSave)
+            {
+                Logger.Info("Direct save requested from Manage Print Jobs.");
+                showPrintDialog = false;
+                Job.ApplyMetadata();
+            }
+
             while (true)
             {
                 if (showPrintDialog)
@@ -96,12 +105,14 @@ namespace clawSoft.clawPDF.Workflow
 
                 QueryOutputLocation();
 
-                if (Cancel && showPrintDialog && WorkflowStep == WorkflowStep.AbortedByUser)
+                if (Cancel && (showPrintDialog || directSave) && WorkflowStep == WorkflowStep.AbortedByUser)
                 {
-                    // "Save as" was cancelled: back to the print job window
+                    // "Save as" was cancelled: back to the print job window, the job is kept
                     Logger.Info("Save dialog cancelled, showing the print job window again.");
                     Cancel = false;
                     WorkflowStep = initialWorkflowStep;
+                    directSave = false;
+                    showPrintDialog = true;
                     continue;
                 }
 

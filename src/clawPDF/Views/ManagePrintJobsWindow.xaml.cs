@@ -7,6 +7,7 @@ using clawSoft.clawPDF.Core.Jobs;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Shared.Helper;
 using clawSoft.clawPDF.ViewModels;
+using clawSoft.clawPDF.Workflow;
 using NLog;
 
 namespace clawSoft.clawPDF.Views
@@ -40,6 +41,9 @@ namespace clawSoft.clawPDF.Views
             PreviewButton.ToolTip =
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
                     "PreviewToolTip", "Preview the selected print job (double click / Enter)");
+            SaveButton.ToolTip =
+                TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
+                    "SaveToolTip", "Save the selected print job now, using the default profile");
             UpdatePreviewButton();
         }
 
@@ -65,6 +69,8 @@ namespace clawSoft.clawPDF.Views
         {
             if (PreviewButton != null && JobList != null)
                 PreviewButton.IsEnabled = JobList.SelectedItem is IJobInfo;
+            if (SaveButton != null && JobList != null)
+                SaveButton.IsEnabled = JobList.SelectedItems.Count == 1 && JobList.SelectedItem is IJobInfo;
         }
 
         private void JobListItem_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -84,6 +90,22 @@ namespace clawSoft.clawPDF.Views
         {
             if (JobList.SelectedItem is IJobInfo jobInfo)
                 ShowPreview(jobInfo);
+        }
+
+        /// <summary>
+        ///     Saves the selected job right away: it becomes the next job in the queue and its workflow
+        ///     opens the "Save as" dialog directly, without the print job window.
+        /// </summary>
+        private void SaveButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (JobList.SelectedItems.Count != 1 || !(JobList.SelectedItem is IJobInfo jobInfo))
+                return;
+
+            if (!JobInfoQueue.Instance.MoveToFront(jobInfo))
+                return;
+
+            DirectSaveRequest.Set(jobInfo);
+            Close();
         }
 
         private void ShowPreview(IJobInfo jobInfo)

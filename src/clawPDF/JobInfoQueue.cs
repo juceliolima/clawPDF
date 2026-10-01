@@ -134,6 +134,26 @@ namespace clawSoft.clawPDF
         }
 
         /// <summary>
+        ///     Moves a JobInfo to the first position, so it is the next job to be processed
+        /// </summary>
+        /// <param name="jobInfo">The JobInfo to move</param>
+        /// <returns>true, if the job is in the queue</returns>
+        public bool MoveToFront(IJobInfo jobInfo)
+        {
+            var index = JobInfos.IndexOf(jobInfo);
+            if (index < 0)
+                return false;
+
+            if (index > 0)
+            {
+                JobInfos.RemoveAt(index);
+                JobInfos.Insert(0, jobInfo);
+            }
+
+            return true;
+        }
+
+        /// <summary>
         ///     Removes a JobInfo from the Queue
         /// </summary>
         /// <param name="jobInfo">The JobInfo to remove</param>
