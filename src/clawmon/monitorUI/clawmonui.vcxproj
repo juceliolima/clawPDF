@@ -31,11 +31,16 @@
     <RootNamespace>clawmonui</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <!-- VS 2026 (18.x) ships the v145 toolset; older Visual Studio keeps v143 -->
-    <ClawPlatformToolset Condition="'$(VisualStudioVersion)' != '' And '$(VisualStudioVersion)' &gt;= '18.0'">v145</ClawPlatformToolset>
-    <ClawPlatformToolset Condition="'$(ClawPlatformToolset)' == ''">v143</ClawPlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <!-- Use the newest installed toolset for the platform being built: v145 (VS 2026), v143 (VS 2022),
+       otherwise the default of this Visual Studio. Avoids "v145 build tools not found" when a
+       toolset (e.g. ARM64) is missing. -->
+  <PropertyGroup Label="ClawToolset">
+    <ClawPlatformToolset Condition="Exists('$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v145')">v145</ClawPlatformToolset>
+    <ClawPlatformToolset Condition="'$(ClawPlatformToolset)' == '' And (Exists('$(VCTargetsPath)\Platforms\$(Platform)\PlatformToolsets\v143') Or Exists('$(VCTargetsPath)\..\v170\Platforms\$(Platform)\PlatformToolsets\v143'))">v143</ClawPlatformToolset>
+    <ClawPlatformToolset Condition="'$(ClawPlatformToolset)' == ''">$(DefaultPlatformToolset)</ClawPlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <PlatformToolset>$(ClawPlatformToolset)</PlatformToolset>
