@@ -3,14 +3,18 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using clawSoft.clawPDF.Core.Jobs;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Shared.Helper;
 using clawSoft.clawPDF.ViewModels;
+using NLog;
 
 namespace clawSoft.clawPDF.Views
 {
     internal partial class ManagePrintJobsWindow : Window
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public ManagePrintJobsWindow()
         {
             InitializeComponent();
@@ -32,6 +36,10 @@ namespace clawSoft.clawPDF.Views
             view.Columns[2].Header =
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow", "PagesColoumn",
                     "Pages");
+            PreviewButton.ToolTip =
+                TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
+                    "PreviewToolTip", "Preview the selected print job (double click / Enter)");
+            UpdatePreviewButton();
         }
 
         private void OnDragEnter(object sender, DragEventArgs e)
@@ -49,6 +57,47 @@ namespace clawSoft.clawPDF.Views
             var vm = (ManagePrintJobsViewModel)DataContext;
             vm.DeleteJobCommand.RaiseCanExecuteChanged();
             vm.MergeJobsCommand.RaiseCanExecuteChanged();
+            UpdatePreviewButton();
+        }
+
+        private void UpdatePreviewButton()
+        {
+            if (PreviewButton != null && JobList != null)
+                PreviewButton.IsEnabled = JobList.SelectedItem is IJobInfo;
+        }
+
+        private void JobListItem_OnMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton != MouseButton.Left)
+                return;
+
+            var item = sender as ListViewItem;
+            if (item?.DataContext is IJobInfo jobInfo)
+            {
+                e.Handled = true;
+                ShowPreview(jobInfo);
+            }
+        }
+
+        private void PreviewButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (JobList.SelectedItem is IJobInfo jobInfo)
+                ShowPreview(jobInfo);
+        }
+
+        private void ShowPreview(IJobInfo jobInfo)
+        {
+            try
+            {
+                // Modal: the job can't be deleted/merged while it is shown
+                var preview = new PrintJobPreviewWindow(jobInfo) { Owner = this };
+                preview.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Could not open the print preview");
+                MessageBox.Show(this, ex.Message, "clawPDF", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void OnActivated(object sender, EventArgs e)
@@ -60,6 +109,11 @@ namespace clawSoft.clawPDF.Views
         {
             if (e.Key == Key.Escape)
                 Close();
+            else if (e.Key == Key.Enter && JobList.IsKeyboardFocusWithin && JobList.SelectedItem is IJobInfo jobInfo)
+            {
+                e.Handled = true;
+                ShowPreview(jobInfo);
+            }
         }
     }
 }

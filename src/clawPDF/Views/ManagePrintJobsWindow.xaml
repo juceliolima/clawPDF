@@ -48,6 +48,8 @@
                 </Button>
                 <Button Margin="10 10 5 10" Name="DeleteButton" Padding="5" Command="{Binding DeleteJobCommand}"
                         CommandParameter="{Binding SelectedItems, ElementName=JobList}" Content="Delete" />
+                <Button Margin="10 10 5 10" Name="PreviewButton" Padding="5" Click="PreviewButton_OnClick"
+                        Content="Preview" />
                 <Button Margin="10 10 5 10" Name="ContinueButton" Padding="5" IsCancel="True" Content="Continue" />
             </StackPanel>
             <StackPanel VerticalAlignment="Center" Margin="0 0 5 0">
@@ -66,6 +68,11 @@
             </StackPanel>
             <ListView Name="JobList" ItemsSource="{Binding JobInfos}" SelectionChanged="JobList_OnSelectionChanged"
                       IsSynchronizedWithCurrentItem="True">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListViewItem}}">
+                        <EventSetter Event="MouseDoubleClick" Handler="JobListItem_OnMouseDoubleClick" />
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Title" Width="300"
