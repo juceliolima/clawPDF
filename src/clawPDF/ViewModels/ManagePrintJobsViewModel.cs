@@ -201,15 +201,21 @@ namespace clawSoft.clawPDF.ViewModels
         /// <summary>
         ///     Merges all jobs that were printed on the given printer (the first one in the list receives the others)
         /// </summary>
-        public void MergeJobsOfPrinter(string printerName)
+        /// <returns>The resulting job (the first job of the printer), or null if the printer has no jobs</returns>
+        public IJobInfo MergeJobsOfPrinter(string printerName)
         {
             var jobs = _jobInfos
                 .Where(j => string.Equals(PrinterOf(j), printerName, StringComparison.OrdinalIgnoreCase))
                 .Cast<object>()
                 .ToList();
 
+            if (jobs.Count == 0)
+                return null;
+
             if (CanExecuteMergeJobs(jobs))
                 ExecuteMergeJobs(jobs);
+
+            return (IJobInfo)jobs[0];
         }
 
         private static string PrinterOf(IJobInfo jobInfo)

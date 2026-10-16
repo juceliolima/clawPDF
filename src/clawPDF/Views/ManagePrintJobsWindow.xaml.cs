@@ -27,6 +27,9 @@ namespace clawSoft.clawPDF.Views
         /// <summary>Drop-down of the "Delete" split button (one entry per printer)</summary>
         private readonly ContextMenu _deleteByPrinterMenu = new ContextMenu();
 
+        /// <summary>Drop-down of the "Save" split button (merge and save, one entry per printer)</summary>
+        private readonly ContextMenu _saveByPrinterMenu = new ContextMenu();
+
         public ManagePrintJobsWindow()
         {
             InitializeComponent();
@@ -55,6 +58,9 @@ namespace clawSoft.clawPDF.Views
             MergeByPrinterButton.ToolTip =
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
                     "MergeByPrinterToolTip", "Merge all jobs of one printer");
+            SaveByPrinterButton.ToolTip =
+                TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
+                    "SaveByPrinterToolTip", "Merge all jobs of one printer and save the result");
             DeleteByPrinterButton.ToolTip =
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
                     "DeleteByPrinterToolTip", "Delete all jobs of one printer");
@@ -189,11 +195,57 @@ namespace clawSoft.clawPDF.Views
             if (JobList.SelectedItems.Count != 1 || !(JobList.SelectedItem is IJobInfo jobInfo))
                 return;
 
-            if (!JobInfoQueue.Instance.MoveToFront(jobInfo))
+            SaveDirectly(jobInfo);
+        }
+
+        /// <summary>
+        ///     The job becomes the next one in the queue, the window closes and the workflow opens "Save as" directly
+        /// </summary>
+        private void SaveDirectly(IJobInfo jobInfo)
+        {
+            if (jobInfo == null || !JobInfoQueue.Instance.MoveToFront(jobInfo))
                 return;
 
             DirectSaveRequest.Set(jobInfo);
             Close();
+        }
+
+        /// <summary>
+        ///     Opens the drop-down of the "Save" split button: merge all jobs of a printer, then save the merged job
+        /// </summary>
+        private void SaveByPrinterButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            var vm = (ManagePrintJobsViewModel)DataContext;
+            var format = TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
+                "SaveFromPrinter", "Merge and save {0} ({1})");
+
+            _saveByPrinterMenu.Items.Clear();
+            foreach (var printer in vm.GetPrintersWithJobCount())
+            {
+                var printerName = printer.Key;
+                var name = string.IsNullOrEmpty(printerName) ? "?" : printerName;
+                string header;
+                try
+                {
+                    header = string.Format(format, name, printer.Value);
+                }
+                catch (FormatException)
+                {
+                    header = name + " (" + printer.Value + ")";
+                }
+
+                // a printer with a single job is simply saved (nothing to merge)
+                var item = new MenuItem { Header = header };
+                item.Click += (s, args) => SaveDirectly(vm.MergeJobsOfPrinter(printerName));
+                _saveByPrinterMenu.Items.Add(item);
+            }
+
+            if (_saveByPrinterMenu.Items.Count == 0)
+                return;
+
+            _saveByPrinterMenu.PlacementTarget = SaveButton;
+            _saveByPrinterMenu.Placement = PlacementMode.Bottom;
+            _saveByPrinterMenu.IsOpen = true;
         }
 
         /// <summary>
