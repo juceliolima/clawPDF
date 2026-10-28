@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Threading;
 using clawSoft.clawPDF.Core.Jobs;
 using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Shared.Helper;
@@ -81,6 +83,27 @@ namespace clawSoft.clawPDF.Views
             var vm = (ManagePrintJobsViewModel)DataContext;
             vm.ConfirmMergeOfDifferentPrinters = ConfirmMergeOfDifferentPrinters;
             vm.ConfirmDelete = ConfirmDelete;
+
+            // scroll to the newest job: now (the window often opens because a job just arrived) and on every new job
+            ((INotifyCollectionChanged)vm.JobInfos).CollectionChanged += JobInfos_OnCollectionChanged;
+            Closed += (s, args) =>
+                ((INotifyCollectionChanged)vm.JobInfos).CollectionChanged -= JobInfos_OnCollectionChanged;
+            Dispatcher.BeginInvoke(new Action(ScrollToLastJob), DispatcherPriority.Background);
+        }
+
+        private void JobInfos_OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action != NotifyCollectionChangedAction.Add)
+                return;
+
+            // wait until the ListView has created the row
+            Dispatcher.BeginInvoke(new Action(ScrollToLastJob), DispatcherPriority.Background);
+        }
+
+        private void ScrollToLastJob()
+        {
+            if (JobList.Items.Count > 0)
+                JobList.ScrollIntoView(JobList.Items[JobList.Items.Count - 1]);
         }
 
         /// <summary>
