@@ -14,7 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using clawSoft.clawPDF.Core.Ghostscript;
 using clawSoft.clawPDF.Core.Jobs;
+using clawSoft.clawPDF.Helper;
 using clawSoft.clawPDF.Shared.Helper;
+using clawSoft.clawPDF.Workflow;
 using NLog;
 
 namespace clawSoft.clawPDF.Views
@@ -104,7 +106,7 @@ namespace clawSoft.clawPDF.Views
             _sessionFolder = PreviewRenderer.CreateSessionFolder();
             var sessionFolder = _sessionFolder;
 
-            IList<string> files = null;
+            IList<PreviewRenderedPage> files = null;
             Exception error = null;
 
             _isRendering = true;
@@ -139,9 +141,14 @@ namespace clawSoft.clawPDF.Views
                 return;
             }
 
+            // automatic rotation rules of the profile the job will use (per source document)
+            var rotations = GetSourceRotations();
+
             foreach (var file in files)
             {
-                var page = PreviewPage.Create(file, _renderer.Dpi);
+                var page = PreviewPage.Create(file.File, _renderer.Dpi);
+                if (page != null && file.SourceIndex >= 0 && file.SourceIndex < rotations.Length)
+                    page.Rotate(rotations[file.SourceIndex]);
                 if (page != null)
                     _pages.Add(page);
             }
@@ -170,6 +177,22 @@ namespace clawSoft.clawPDF.Views
             }), System.Windows.Threading.DispatcherPriority.Loaded);
 
             PageScroller.Focus();
+        }
+
+        private int[] GetSourceRotations()
+        {
+            try
+            {
+                var settings = SettingsHelper.Settings;
+                var profile = WorkflowFactory.PreselectedProfile(_jobInfo, settings);
+                return PageRotation.GetSourceRotations(_jobInfo, profile,
+                    settings.ApplicationSettings.TitleReplacement);
+            }
+            catch (Exception ex)
+            {
+                Logger.Debug(ex, "Preview: could not determine automatic rotation");
+                return new int[0];
+            }
         }
 
         private void OnClosed(object sender, EventArgs e)

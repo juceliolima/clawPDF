@@ -116,6 +116,17 @@
                 <userControls:AutosaveTab x:Name="AutosaveTabUserControl" />
             </TabItem>
 
+            <TabItem Template="{StaticResource FancyTabItem}" x:Name="RotationTab">
+                <TabItem.Header>
+                    <userControls1:TabHeaderControl x:Name="RotationTabText" Text="Rotation">
+                        <Viewbox Margin="3">
+                            <TextBlock Text="&#x21BB;" FontWeight="Bold" Foreground="White" />
+                        </Viewbox>
+                    </userControls1:TabHeaderControl>
+                </TabItem.Header>
+                <userControls:RotationTab x:Name="RotationTabUserControl" />
+            </TabItem>
+
             <TabItem Template="{StaticResource FancyTabItem}" x:Name="ActionsTab">
                 <TabItem.Header>
                     <userControls1:TabHeaderControl x:Name="ActionsTabText" Text="Actions">

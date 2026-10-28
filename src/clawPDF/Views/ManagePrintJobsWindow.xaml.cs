@@ -58,6 +58,9 @@ namespace clawSoft.clawPDF.Views
             view.Columns[3].Header =
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow", "PrinterColoumn",
                     "Printer");
+            view.Columns[4].Header =
+                TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow", "RotationColoumn",
+                    "Rotation");
             MergeByPrinterButton.ToolTip =
                 TranslationHelper.Instance.TranslatorInstance.GetTranslation("ManagePrintJobsWindow",
                     "MergeByPrinterToolTip", "Merge all jobs of one printer");

@@ -184,6 +184,11 @@ namespace clawSoft.clawPDF.Core.Jobs
         public bool SkipSaveFileDialog { get; set; }
 
         /// <summary>
+        ///     Clockwise rotation per source file (see <see cref="PageRotation" />), set by the workflow before RunJob
+        /// </summary>
+        public int[] SourceRotations { get; set; }
+
+        /// <summary>
         ///     If true, the job has completed execution
         /// </summary>
         public bool Completed { get; set; }

@@ -340,8 +340,82 @@ namespace clawSoft.clawPDF.Core.Jobs
 
         public override event EventHandler<QueryPasswordEventArgs> OnRetypeSmtpPassword;
 
+        private static bool IsPdfOutput(OutputFormat format)
+        {
+            switch (format)
+            {
+                case OutputFormat.Pdf:
+                case OutputFormat.PdfA1B:
+                case OutputFormat.PdfA2B:
+                case OutputFormat.PdfA3B:
+                case OutputFormat.PdfX:
+                case OutputFormat.PdfImage32:
+                case OutputFormat.PdfImage24:
+                case OutputFormat.PdfImage8:
+                case OutputFormat.PdfOCR32:
+                case OutputFormat.PdfOCR24:
+                case OutputFormat.PdfOCR8:
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static int CountPdfPages(string file)
+        {
+            try
+            {
+                return PDFProcessor.GetNumberOfPages(file);
+            }
+            catch
+            {
+                return 1; // not a readable PDF (e.g. PostScript cover): assume one page
+            }
+        }
+
+        /// <summary>
+        ///     Automatic rotation rules of the profile: rotates the pages of the matching source files in the PDF.
+        ///     Runs before encryption/signing. Image and text formats are not rotated.
+        /// </summary>
+        private void ApplyPageRotation()
+        {
+            try
+            {
+                if (!PageRotation.HasRotation(SourceRotations) || !IsPdfOutput(Profile.OutputFormat) ||
+                    TempOutputFiles == null || TempOutputFiles.Count == 0)
+                    return;
+
+                var pdfFile = TempOutputFiles[0];
+                var totalPages = PDFProcessor.GetNumberOfPages(pdfFile);
+
+                // order of the Ghostscript input: [cover] source files [attachment]
+                var coverPages = Profile.CoverPage.Enabled && !string.IsNullOrEmpty(Profile.CoverPage.File)
+                    ? CountPdfPages(Profile.CoverPage.File)
+                    : 0;
+                var attachmentPages = Profile.AttachmentPage.Enabled && !string.IsNullOrEmpty(Profile.AttachmentPage.File)
+                    ? CountPdfPages(Profile.AttachmentPage.File)
+                    : 0;
+
+                var sourcePageCounts = new int[JobInfo.SourceFiles.Count];
+                for (var i = 0; i < sourcePageCounts.Length; i++)
+                    sourcePageCounts[i] = PageRotation.CountPostScriptPages(JobInfo.SourceFiles[i].Filename);
+
+                var rotations = PageRotation.MapToPages(SourceRotations, sourcePageCounts, coverPages + 1,
+                    totalPages - coverPages - attachmentPages);
+
+                Logger.Debug("Automatic rotation: {0} page(s)", rotations.Count);
+                PDFProcessor.RotatePages(pdfFile, rotations);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Automatic page rotation failed, the document is saved without rotation");
+            }
+        }
+
         private void ProcessOutput()
         {
+            ApplyPageRotation();
+
             if (!PDFProcessor.ProcessingRequired(Profile))
                 return;
 

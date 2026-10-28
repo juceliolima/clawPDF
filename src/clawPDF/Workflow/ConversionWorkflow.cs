@@ -170,6 +170,17 @@ namespace clawSoft.clawPDF.Workflow
 
             Logger.Info("Converting " + Job.OutputFilenameTemplate);
 
+            // automatic rotation rules of the (final) profile, per source file
+            try
+            {
+                Job.SourceRotations = PageRotation.GetSourceRotations(JobInfo, Job.Profile,
+                    Settings?.ApplicationSettings?.TitleReplacement);
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex, "Could not determine automatic page rotation");
+            }
+
             if (Job.Profile.ShowProgress)
                 ShowConversionProgress();
 

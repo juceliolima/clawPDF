@@ -97,6 +97,7 @@ namespace clawSoft.clawPDF.Views
             DocumentTabUserControl.ViewModel.CurrentProfile = currentProfile;
             SaveTabUserControl.ViewModel.CurrentProfile = currentProfile;
             AutosaveTabUserControl.ViewModel.CurrentProfile = currentProfile;
+            RotationTabUserControl.ViewModel.CurrentProfile = currentProfile;
             ActionsTabUserControl.ViewModel.CurrentProfile = currentProfile;
             ImageFormatsTabUserControl.ViewModel.CurrentProfile = currentProfile;
             PdfTabUserControl.ViewModel.CurrentProfile = currentProfile;

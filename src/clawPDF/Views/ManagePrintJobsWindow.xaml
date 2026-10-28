@@ -2,8 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:viewModels="clr-namespace:clawSoft.clawPDF.ViewModels"
+        xmlns:converter="clr-namespace:clawSoft.clawPDF.Converter"
         Title="Manage Print Jobs"
-        Height="319" Width="720"
+        Height="319" Width="790"
         WindowStartupLocation="CenterScreen"
         Loaded="OnLoaded"
         AllowDrop="True"
@@ -13,6 +14,9 @@
         Activated="OnActivated"
         Icon="../clawPDF.ico"
         KeyDown="ManagePrintJobsWindow_OnKeyDown" x:ClassModifier="internal">
+    <Window.Resources>
+        <converter:JobRotationConverter x:Key="JobRotationConverter" />
+    </Window.Resources>
     <Window.DataContext>
         <viewModels:ManagePrintJobsViewModel />
     </Window.DataContext>
@@ -92,6 +96,8 @@
                         <GridViewColumn Header="Pages" Width="60" DisplayMemberBinding="{Binding TotalPages}" />
                         <GridViewColumn Header="Printer" Width="150"
                                         DisplayMemberBinding="{Binding SourceFiles[0].PrinterName}" />
+                        <GridViewColumn Header="Rotation" Width="70"
+                                        DisplayMemberBinding="{Binding Converter={StaticResource JobRotationConverter}}" />
                     </GridView>
                 </ListView.View>
             </ListView>

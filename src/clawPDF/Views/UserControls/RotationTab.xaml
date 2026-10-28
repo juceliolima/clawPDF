@@ -1,0 +1,79 @@
+<UserControl x:Class="clawSoft.clawPDF.Views.UserControls.RotationTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:userControls1="clr-namespace:clawSoft.clawPDF.Shared.ViewModels.UserControls;assembly=clawPDF.Shared"
+             mc:Ignorable="d" d:DesignWidth="520" x:ClassModifier="internal">
+    <UserControl.DataContext>
+        <userControls1:CurrentProfileViewModel />
+    </UserControl.DataContext>
+    <HeaderedContentControl Name="RotationControl" Template="{StaticResource HeaderPanelTemplate}"
+                            Header="Automatic rotation">
+        <StackPanel Margin="0 5 0 0">
+            <TextBlock Name="RotationDescriptionText" TextWrapping="Wrap" Margin="0 0 0 8"
+                       Foreground="{StaticResource ControlDefaultForeground}">Pages of documents whose title matches a rule are rotated automatically (preview and PDF output). Use * for any text and ? for a single character, e.g. *invoice*. The first matching rule is used.</TextBlock>
+
+            <ListView Name="RulesList" Height="150" SelectionMode="Single"
+                      SelectionChanged="RulesList_OnSelectionChanged">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Title pattern" Width="280" DisplayMemberBinding="{Binding Pattern}" />
+                        <GridViewColumn Header="Rotation" Width="190" DisplayMemberBinding="{Binding AngleText}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <Grid Margin="0 8 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Name="PatternLabelText" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"
+                           Margin="0 0 8 0" Foreground="{StaticResource ControlDefaultForeground}">Title pattern:</TextBlock>
+                <TextBox Name="PatternTextBox" Grid.Row="0" Grid.Column="1" Height="24"
+                         VerticalContentAlignment="Center"
+                         Background="{StaticResource ContainerBackground}"
+                         Foreground="{StaticResource ControlDefaultForeground}"
+                         TextChanged="PatternTextBox_OnTextChanged" />
+                <TextBlock Name="AngleLabelText" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"
+                           Margin="0 6 8 0" Foreground="{StaticResource ControlDefaultForeground}">Rotation:</TextBlock>
+                <ComboBox Name="AngleComboBox" Grid.Row="1" Grid.Column="1" Height="24" Margin="0 6 0 0"
+                          Width="260" HorizontalAlignment="Left"
+                          DisplayMemberPath="Text" SelectedValuePath="Angle" />
+            </Grid>
+
+            <WrapPanel Margin="0 8 0 0">
+                <Button Name="AddRuleButton" Padding="10 3" Margin="0 0 6 0" Click="AddRuleButton_OnClick">Add</Button>
+                <Button Name="UpdateRuleButton" Padding="10 3" Margin="0 0 6 0" Click="UpdateRuleButton_OnClick">Update</Button>
+                <Button Name="RemoveRuleButton" Padding="10 3" Margin="0 0 6 0" Click="RemoveRuleButton_OnClick">Remove</Button>
+                <Button Name="MoveRuleUpButton" Padding="8 3" Margin="0 0 2 0" Click="MoveRuleUpButton_OnClick">&#x25B2;</Button>
+                <Button Name="MoveRuleDownButton" Padding="8 3" Click="MoveRuleDownButton_OnClick">&#x25BC;</Button>
+            </WrapPanel>
+
+            <Grid Margin="0 12 0 0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TextBlock Name="TestLabelText" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"
+                           Margin="0 0 8 0" Foreground="{StaticResource ControlDefaultForeground}">Test a title:</TextBlock>
+                <TextBox Name="TestTitleTextBox" Grid.Row="0" Grid.Column="1" Height="24"
+                         VerticalContentAlignment="Center"
+                         Background="{StaticResource ContainerBackground}"
+                         Foreground="{StaticResource ControlDefaultForeground}"
+                         TextChanged="TestTitleTextBox_OnTextChanged" />
+                <TextBlock Name="TestResultText" Grid.Row="1" Grid.Column="1" Margin="0 4 0 0" TextWrapping="Wrap"
+                           Foreground="{StaticResource ControlDefaultForeground}" />
+            </Grid>
+        </StackPanel>
+    </HeaderedContentControl>
+</UserControl>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime;
 using System.Text;
 using clawSoft.clawPDF.Core.Settings.Enums;
@@ -159,6 +160,11 @@ namespace clawSoft.clawPDF.Core.Settings
         public bool ShowManagePrintJobs { get; set; }
 
         /// <summary>
+        ///     Rotate pages automatically based on the document title (first matching rule wins)
+        /// </summary>
+        public IList<RotationRule> RotationRules { get; set; } = new List<RotationRule>();
+
+        /// <summary>
         ///     Template for the Title field. This may contain tokens.
         /// </summary>
         public string TitleTemplate { get; set; }
@@ -196,6 +202,7 @@ namespace clawSoft.clawPDF.Core.Settings
             ShowProgress = true;
             SkipPrintDialog = false;
             ShowManagePrintJobs = false;
+            RotationRules = new List<RotationRule>();
             TitleTemplate = "<PrintJobName>";
         }
 
@@ -301,6 +308,22 @@ namespace clawSoft.clawPDF.Core.Settings
                 ShowManagePrintJobs = false;
             }
 
+            RotationRules = new List<RotationRule>();
+            try
+            {
+                var numRules = int.Parse(data.GetValue(@"" + path + @"RotationRules\numClasses"));
+                for (var i = 0; i < numRules; i++)
+                {
+                    var rule = new RotationRule();
+                    rule.ReadValues(data, @"" + path + @"RotationRules\" + i + @"\");
+                    RotationRules.Add(rule);
+                }
+            }
+            catch
+            {
+                // no rules stored
+            }
+
             try
             {
                 TitleTemplate = Data.UnescapeString(data.GetValue(@"" + path + @"TitleTemplate"));
@@ -340,6 +363,9 @@ namespace clawSoft.clawPDF.Core.Settings
             data.SetValue(@"" + path + @"ShowProgress", ShowProgress.ToString());
             data.SetValue(@"" + path + @"SkipPrintDialog", SkipPrintDialog.ToString());
             data.SetValue(@"" + path + @"ShowManagePrintJobs", ShowManagePrintJobs.ToString());
+            for (var i = 0; i < RotationRules.Count; i++)
+                RotationRules[i].StoreValues(data, @"" + path + @"RotationRules\" + i + @"\");
+            data.SetValue(@"" + path + @"RotationRules\numClasses", RotationRules.Count.ToString());
             data.SetValue(@"" + path + @"TitleTemplate", Data.EscapeString(TitleTemplate));
         }
 
@@ -374,6 +400,8 @@ namespace clawSoft.clawPDF.Core.Settings
             copy.ShowProgress = ShowProgress;
             copy.SkipPrintDialog = SkipPrintDialog;
             copy.ShowManagePrintJobs = ShowManagePrintJobs;
+            copy.RotationRules = new List<RotationRule>();
+            foreach (var rule in RotationRules) copy.RotationRules.Add(rule.Copy());
             copy.TitleTemplate = TitleTemplate;
 
             return copy;
@@ -411,6 +439,9 @@ namespace clawSoft.clawPDF.Core.Settings
             if (!ShowProgress.Equals(v.ShowProgress)) return false;
             if (!SkipPrintDialog.Equals(v.SkipPrintDialog)) return false;
             if (!ShowManagePrintJobs.Equals(v.ShowManagePrintJobs)) return false;
+            if (RotationRules.Count != v.RotationRules.Count) return false;
+            for (var i = 0; i < RotationRules.Count; i++)
+                if (!RotationRules[i].Equals(v.RotationRules[i])) return false;
             if (!TitleTemplate.Equals(v.TitleTemplate)) return false;
 
             return true;
@@ -463,6 +494,7 @@ namespace clawSoft.clawPDF.Core.Settings
             sb.AppendLine("ShowProgress=" + ShowProgress);
             sb.AppendLine("SkipPrintDialog=" + SkipPrintDialog);
             sb.AppendLine("ShowManagePrintJobs=" + ShowManagePrintJobs);
+            foreach (var rule in RotationRules) sb.AppendLine("[RotationRule]" + Environment.NewLine + rule);
             sb.AppendLine("TitleTemplate=" + TitleTemplate);
 
             return sb.ToString();

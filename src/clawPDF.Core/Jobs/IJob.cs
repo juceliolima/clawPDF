@@ -79,6 +79,11 @@ namespace clawSoft.clawPDF.Core.Jobs
         bool SkipSaveFileDialog { get; set; }
 
         /// <summary>
+        ///     Clockwise rotation per source file (automatic rotation rules of the profile). Null = no rotation.
+        /// </summary>
+        int[] SourceRotations { get; set; }
+
+        /// <summary>
         /// </summary>
         /// <returns></returns>
         TokenReplacer TokenReplacer { get; set; }

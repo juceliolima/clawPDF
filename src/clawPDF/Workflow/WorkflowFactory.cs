@@ -49,7 +49,7 @@ namespace clawSoft.clawPDF.Workflow
         /// <param name="jobInfo">The jobinfo used for the decision</param>
         /// <param name="settings">The settings used for the decision</param>
         /// <returns>The profile that is associated with the printer or the default profile</returns>
-        private static ConversionProfile PreselectedProfile(IJobInfo jobInfo, clawPDFSettings settings)
+        internal static ConversionProfile PreselectedProfile(IJobInfo jobInfo, clawPDFSettings settings)
         {
             foreach (var mapping in settings.ApplicationSettings.PrinterMappings)
                 if (mapping.PrinterName.Equals(jobInfo.SourceFiles[0].PrinterName, StringComparison.OrdinalIgnoreCase))

@@ -161,6 +161,7 @@
     <Compile Include="Converter\ColorWithFactorConverter.cs" />
     <Compile Include="Converter\EnumToBooleanConverter.cs" />
     <Compile Include="Converter\GuidToProfileConverter.cs" />
+    <Compile Include="Converter\JobRotationConverter.cs" />
     <Compile Include="Converter\IdentityConverter.cs" />
     <Compile Include="Exceptions\ManagePrintJobsException.cs" />
     <Compile Include="Helper\DataUpgrader.cs" />
@@ -216,6 +217,9 @@
     <Compile Include="ViewModels\UserControls\DebugTabViewModel.cs" />
     <Compile Include="ViewModels\UserControls\PrinterTabViewModel.cs" />
     <Compile Include="ViewModels\UserControls\GeneralTabViewModel.cs" />
+    <Compile Include="Views\UserControls\RotationTab.xaml.cs">
+      <DependentUpon>RotationTab.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UserControls\AutosaveTab.xaml.cs">
       <DependentUpon>AutosaveTab.xaml</DependentUpon>
     </Compile>
@@ -463,6 +467,10 @@
     <Page Include="Themes\LightTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\UserControls\RotationTab.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\UserControls\AutosaveTab.xaml">
       <SubType>Designer</SubType>

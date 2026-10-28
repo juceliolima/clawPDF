@@ -117,6 +117,7 @@
     <Compile Include="Stamping.cs" />
     <Compile Include="OCRSettings.cs" />
     <Compile Include="TiffSettings.cs" />
+    <Compile Include="RotationRule.cs" />
     <Compile Include="TitleReplacement.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@ using iText.Kernel.Pdf.Navigation;
 using iText.Signatures;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -41,6 +42,60 @@ namespace clawSoft.clawPDF.PDFProcessing
             var numberOfPages = pdfReader.GetNumberOfPages();
             pdfReader.Close();
             return numberOfPages;
+        }
+
+        /// <summary>
+        ///     Adds a clockwise rotation to the given pages (sets /Rotate, content is not changed).
+        ///     Uses an incremental update (append mode), so PDF/A and PDF/X documents stay valid.
+        ///     Must be called before encryption and signing.
+        /// </summary>
+        /// <param name="pdfFile">Full path to the (unencrypted) PDF file</param>
+        /// <param name="pageRotations">1-based page number → degrees (multiple of 90)</param>
+        public static void RotatePages(string pdfFile, IDictionary<int, int> pageRotations)
+        {
+            if (pageRotations == null || pageRotations.Count == 0 || !File.Exists(pdfFile))
+                return;
+
+            var tempFile = pdfFile + ".rotate.tmp";
+            try
+            {
+                // the document closes its reader and writer
+                using (var pdf = new PdfDocument(new PdfReader(pdfFile), new PdfWriter(tempFile),
+                           new StampingProperties().UseAppendMode()))
+                {
+                    var pageCount = pdf.GetNumberOfPages();
+                    foreach (var entry in pageRotations)
+                    {
+                        if (entry.Key < 1 || entry.Key > pageCount || entry.Value % 360 == 0)
+                            continue;
+
+                        var page = pdf.GetPage(entry.Key);
+                        var rotation = ((page.GetRotation() + entry.Value) % 360 + 360) % 360;
+                        page.SetRotation(rotation);
+                        page.SetModified();
+                    }
+                }
+
+                File.Copy(tempFile, pdfFile, true);
+                Logger.Debug("Rotated " + pageRotations.Count + " page(s) of " + pdfFile);
+            }
+            catch (Exception ex)
+            {
+                // a rotation problem must not lose the document: keep it unrotated
+                Logger.Error(ex, "Could not rotate pages of " + pdfFile);
+            }
+            finally
+            {
+                try
+                {
+                    if (File.Exists(tempFile))
+                        File.Delete(tempFile);
+                }
+                catch
+                {
+                    // ignore
+                }
+            }
         }
 
         /// <summary>

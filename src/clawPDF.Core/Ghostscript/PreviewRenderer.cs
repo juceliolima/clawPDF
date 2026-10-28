@@ -49,12 +49,13 @@ namespace clawSoft.clawPDF.Core.Ghostscript
         }
 
         /// <summary>
-        ///     Renders all source files of the job (in order, as one continuous document) to PNG files.
+        ///     Renders all source files of the job (in order) to PNG files. Each source file is rendered on its own,
+        ///     so every page knows the document it belongs to (needed for the automatic rotation rules).
         /// </summary>
         /// <param name="jobInfo">The job to preview</param>
         /// <param name="sessionFolder">Empty folder created by <see cref="CreateSessionFolder" /></param>
-        /// <returns>Full paths of the rendered pages, ordered by page number</returns>
-        public IList<string> Render(IJobInfo jobInfo, string sessionFolder)
+        /// <returns>The rendered pages in document order</returns>
+        public IList<PreviewRenderedPage> Render(IJobInfo jobInfo, string sessionFolder)
         {
             if (jobInfo == null)
                 throw new ArgumentNullException(nameof(jobInfo));
@@ -72,62 +73,64 @@ namespace clawSoft.clawPDF.Core.Ghostscript
             Directory.CreateDirectory(sourceFolder);
             Directory.CreateDirectory(pagesFolder);
 
-            // Copy the spool files, so the job can be deleted/merged/converted
-            // while (or after) the preview is being rendered without file locks.
-            var sourceFiles = new List<string>();
-            var index = 0;
-            foreach (var sfi in jobInfo.SourceFiles)
+            var pages = new List<PreviewRenderedPage>();
+            ExternalException gsError = null;
+            var foundSource = false;
+
+            for (var index = 0; index < jobInfo.SourceFiles.Count; index++)
             {
+                var sfi = jobInfo.SourceFiles[index];
                 if (string.IsNullOrEmpty(sfi.Filename) || !File.Exists(sfi.Filename))
                 {
                     Logger.Warn("Preview: spool file not found: " + sfi.Filename);
                     continue;
                 }
 
-                var copy = Path.Combine(sourceFolder,
-                    index.ToString("D3") + "_" + Path.GetFileName(sfi.Filename));
+                foundSource = true;
+
+                // Copy the spool file, so the job can be deleted/merged/converted
+                // while (or after) the preview is being rendered without file locks.
+                var copy = Path.Combine(sourceFolder, index.ToString("D3") + "_" + Path.GetFileName(sfi.Filename));
                 File.Copy(sfi.Filename, copy, true);
-                sourceFiles.Add(copy);
-                index++;
+
+                var prefix = PagePrefix + index.ToString("D3") + "_";
+                var parameters = new List<string>
+                {
+                    "gs",
+                    "-sFONTPATH=" + new OsHelper().WindowsFontsFolder + ";" +
+                    Path.Combine(Directory.GetCurrentDirectory(), "fonts"),
+                    "-dNOPAUSE",
+                    "-dBATCH",
+                    "-dSAFER",
+                    "-sDEVICE=png16m",
+                    "-r" + Dpi,
+                    "-dTextAlphaBits=4",
+                    "-dGraphicsAlphaBits=4",
+                    "-sOutputFile=" + Path.Combine(pagesFolder, prefix + "%05d.png"),
+                    "-f",
+                    copy
+                };
+
+                Logger.Debug("Preview Ghostscript parameters:\r\n" + string.Join("\r\n", parameters));
+
+                try
+                {
+                    GhostscriptCall.CallAPI(parameters.ToArray());
+                }
+                catch (ExternalException ex)
+                {
+                    // Ghostscript may fail on a later page; pages rendered so far are still shown
+                    Logger.Warn(ex, "Preview: Ghostscript returned an error (" + ex.ErrorCode + ")");
+                    gsError = ex;
+                }
+
+                pages.AddRange(Directory.GetFiles(pagesFolder, prefix + "*.png")
+                    .OrderBy(f => f, StringComparer.OrdinalIgnoreCase)
+                    .Select(f => new PreviewRenderedPage(f, index)));
             }
 
-            if (sourceFiles.Count == 0)
+            if (!foundSource)
                 throw new FileNotFoundException("No spool file found for this print job.");
-
-            var parameters = new List<string>
-            {
-                "gs",
-                "-sFONTPATH=" + new OsHelper().WindowsFontsFolder + ";" +
-                Path.Combine(Directory.GetCurrentDirectory(), "fonts"),
-                "-dNOPAUSE",
-                "-dBATCH",
-                "-dSAFER",
-                "-sDEVICE=png16m",
-                "-r" + Dpi,
-                "-dTextAlphaBits=4",
-                "-dGraphicsAlphaBits=4",
-                "-sOutputFile=" + Path.Combine(pagesFolder, PagePrefix + "%05d.png"),
-                "-f"
-            };
-            parameters.AddRange(sourceFiles);
-
-            Logger.Debug("Preview Ghostscript parameters:\r\n" + string.Join("\r\n", parameters));
-
-            ExternalException gsError = null;
-            try
-            {
-                GhostscriptCall.CallAPI(parameters.ToArray());
-            }
-            catch (ExternalException ex)
-            {
-                // Ghostscript may fail on a later page; pages rendered so far are still shown
-                Logger.Warn(ex, "Preview: Ghostscript returned an error (" + ex.ErrorCode + ")");
-                gsError = ex;
-            }
-
-            var pages = Directory.GetFiles(pagesFolder, PagePrefix + "*.png")
-                .OrderBy(f => f, StringComparer.OrdinalIgnoreCase)
-                .ToList();
 
             if (pages.Count == 0)
                 throw new InvalidOperationException("Ghostscript did not produce any page.", gsError);
@@ -181,5 +184,20 @@ namespace clawSoft.clawPDF.Core.Ghostscript
                 Logger.Debug(ex, "Preview: cleanup of old sessions failed");
             }
         }
+    }
+
+    /// <summary>
+    ///     One rendered preview page and the index of the source file (document) it belongs to
+    /// </summary>
+    public class PreviewRenderedPage
+    {
+        public PreviewRenderedPage(string file, int sourceIndex)
+        {
+            File = file;
+            SourceIndex = sourceIndex;
+        }
+
+        public string File { get; }
+        public int SourceIndex { get; }
     }
 }

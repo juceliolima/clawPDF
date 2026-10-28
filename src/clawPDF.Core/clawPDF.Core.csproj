@@ -123,6 +123,7 @@
     <Compile Include="Jobs\JobTranslations.cs" />
     <Compile Include="Jobs\Metadata.cs" />
     <Compile Include="Jobs\SourceFileInfo.cs" />
+    <Compile Include="Jobs\PageRotation.cs" />
     <Compile Include="Jobs\TitleReplacer.cs" />
     <Compile Include="OutputFormatHelper.cs" />
     <Compile Include="Printer\PortType.cs" />
