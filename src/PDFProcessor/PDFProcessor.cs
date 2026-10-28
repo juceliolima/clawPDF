@@ -45,7 +45,10 @@ namespace clawSoft.clawPDF.PDFProcessing
         }
 
         /// <summary>
-        ///     Adds a clockwise rotation to the given pages (sets /Rotate, content is not changed).
+        ///     Sets the clockwise rotation of the given pages (/Rotate, content is not changed).
+        ///     The value replaces any rotation the page already has: Ghostscript's automatic page rotation
+        ///     (AutoRotatePages) may already have rotated the page, and the rule's angle is meant relative to the
+        ///     page as printed (as shown in the preview), so adding both would rotate the page twice.
         ///     Uses an incremental update (append mode), so PDF/A and PDF/X documents stay valid.
         ///     Must be called before encryption and signing.
         /// </summary>
@@ -70,7 +73,7 @@ namespace clawSoft.clawPDF.PDFProcessing
                             continue;
 
                         var page = pdf.GetPage(entry.Key);
-                        var rotation = ((page.GetRotation() + entry.Value) % 360 + 360) % 360;
+                        var rotation = (entry.Value % 360 + 360) % 360;
                         page.SetRotation(rotation);
                         page.SetModified();
                     }
