@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using clawSoft.clawPDF.Assistants;
@@ -60,12 +61,16 @@ namespace clawSoft.clawPDF.Helper
             PrintPrintableFiles(validFiles);
         }
 
+        /// <summary>
+        ///     PostScript and PDF files are converted directly by Ghostscript; every other file has to be printed
+        ///     by its associated application. The extension check is case insensitive (e.g. "FILE.PDF").
+        /// </summary>
         private static bool IsPrintFile(string file)
         {
-            if (file.EndsWith(".ps"))
+            if (file.EndsWith(".ps", StringComparison.OrdinalIgnoreCase))
                 return false;
 
-            if (file.EndsWith(".pdf"))
+            if (file.EndsWith(".pdf", StringComparison.OrdinalIgnoreCase))
                 return false;
 
             return true;
