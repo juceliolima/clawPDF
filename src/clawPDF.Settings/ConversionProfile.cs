@@ -154,6 +154,11 @@ namespace clawSoft.clawPDF.Core.Settings
         public bool SkipPrintDialog { get; set; }
 
         /// <summary>
+        ///     Opens the "Manage Print Jobs" window instead of the print dialog when a job arrives
+        /// </summary>
+        public bool ShowManagePrintJobs { get; set; }
+
+        /// <summary>
         ///     Template for the Title field. This may contain tokens.
         /// </summary>
         public string TitleTemplate { get; set; }
@@ -190,6 +195,7 @@ namespace clawSoft.clawPDF.Core.Settings
             OutputFormat = OutputFormat.Pdf;
             ShowProgress = true;
             SkipPrintDialog = false;
+            ShowManagePrintJobs = false;
             TitleTemplate = "<PrintJobName>";
         }
 
@@ -288,6 +294,15 @@ namespace clawSoft.clawPDF.Core.Settings
 
             try
             {
+                ShowManagePrintJobs = bool.Parse(data.GetValue(@"" + path + @"ShowManagePrintJobs"));
+            }
+            catch
+            {
+                ShowManagePrintJobs = false;
+            }
+
+            try
+            {
                 TitleTemplate = Data.UnescapeString(data.GetValue(@"" + path + @"TitleTemplate"));
             }
             catch
@@ -324,6 +339,7 @@ namespace clawSoft.clawPDF.Core.Settings
             data.SetValue(@"" + path + @"OutputFormat", OutputFormat.ToString());
             data.SetValue(@"" + path + @"ShowProgress", ShowProgress.ToString());
             data.SetValue(@"" + path + @"SkipPrintDialog", SkipPrintDialog.ToString());
+            data.SetValue(@"" + path + @"ShowManagePrintJobs", ShowManagePrintJobs.ToString());
             data.SetValue(@"" + path + @"TitleTemplate", Data.EscapeString(TitleTemplate));
         }
 
@@ -357,6 +373,7 @@ namespace clawSoft.clawPDF.Core.Settings
             copy.OutputFormat = OutputFormat;
             copy.ShowProgress = ShowProgress;
             copy.SkipPrintDialog = SkipPrintDialog;
+            copy.ShowManagePrintJobs = ShowManagePrintJobs;
             copy.TitleTemplate = TitleTemplate;
 
             return copy;
@@ -393,6 +410,7 @@ namespace clawSoft.clawPDF.Core.Settings
             if (!OutputFormat.Equals(v.OutputFormat)) return false;
             if (!ShowProgress.Equals(v.ShowProgress)) return false;
             if (!SkipPrintDialog.Equals(v.SkipPrintDialog)) return false;
+            if (!ShowManagePrintJobs.Equals(v.ShowManagePrintJobs)) return false;
             if (!TitleTemplate.Equals(v.TitleTemplate)) return false;
 
             return true;
@@ -444,6 +462,7 @@ namespace clawSoft.clawPDF.Core.Settings
             sb.AppendLine("OutputFormat=" + OutputFormat);
             sb.AppendLine("ShowProgress=" + ShowProgress);
             sb.AppendLine("SkipPrintDialog=" + SkipPrintDialog);
+            sb.AppendLine("ShowManagePrintJobs=" + ShowManagePrintJobs);
             sb.AppendLine("TitleTemplate=" + TitleTemplate);
 
             return sb.ToString();

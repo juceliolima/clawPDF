@@ -21,6 +21,9 @@ namespace clawSoft.clawPDF.Views
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>True if the window was closed by "Save" (a job is saved directly)</summary>
+        public bool SaveRequested { get; private set; }
+
         /// <summary>Drop-down of the "Merge All" split button (one entry per printer)</summary>
         private readonly ContextMenu _mergeByPrinterMenu = new ContextMenu();
 
@@ -207,6 +210,7 @@ namespace clawSoft.clawPDF.Views
                 return;
 
             DirectSaveRequest.Set(jobInfo);
+            SaveRequested = true;
             Close();
         }
 

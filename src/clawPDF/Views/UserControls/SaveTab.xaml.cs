@@ -32,6 +32,19 @@ namespace clawSoft.clawPDF.Views.UserControls
 
         public CurrentProfileViewModel ViewModel => (CurrentProfileViewModel)DataContext;
 
+        // "Skip print dialog" and "Open Manage Print Jobs" exclude each other
+        private void SkipPrintDialogCheckBox_OnChecked(object sender, RoutedEventArgs e)
+        {
+            if (ShowManagePrintJobsCheckBox.IsChecked == true)
+                ShowManagePrintJobsCheckBox.IsChecked = false;
+        }
+
+        private void ShowManagePrintJobsCheckBox_OnChecked(object sender, RoutedEventArgs e)
+        {
+            if (SkipPrintDialogCheckBox.IsChecked == true)
+                SkipPrintDialogCheckBox.IsChecked = false;
+        }
+
         private void FilenameTokensComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             InsertToken(FilenameTemplateTextBox, (ComboBox)sender);

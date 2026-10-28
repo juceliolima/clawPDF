@@ -39,8 +39,14 @@
                     Open with standard viewer after conversion
                 </CheckBox>
                 <CheckBox Name="SkipPrintDialogCheckBox" Margin="0,5,0,0"
-                          IsChecked="{Binding CurrentProfile.SkipPrintDialog, Mode=TwoWay}">
+                          IsChecked="{Binding CurrentProfile.SkipPrintDialog, Mode=TwoWay}"
+                          Checked="SkipPrintDialogCheckBox_OnChecked">
                     Skip print dialog (directly proceed to the save dialog)
+                </CheckBox>
+                <CheckBox Name="ShowManagePrintJobsCheckBox" Margin="0,5,0,0"
+                          IsChecked="{Binding CurrentProfile.ShowManagePrintJobs, Mode=TwoWay}"
+                          Checked="ShowManagePrintJobsCheckBox_OnChecked">
+                    Open "Manage Print Jobs" instead of the print dialog
                 </CheckBox>
             </StackPanel>
         </HeaderedContentControl>

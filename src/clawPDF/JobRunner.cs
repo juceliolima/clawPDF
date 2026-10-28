@@ -34,6 +34,12 @@ namespace clawSoft.clawPDF
 
         private Action ManagePrintJobsAction { get; }
 
+        /// <summary>
+        ///     Set when the "Manage Print Jobs" window was closed with "Continue": the remaining jobs then use the
+        ///     print job window, even if their profile opens "Manage Print Jobs". Reset when the queue is empty.
+        /// </summary>
+        internal bool ContinueWithPrintDialog { get; private set; }
+
         public static JobRunner Instance
         {
             get
@@ -130,6 +136,7 @@ namespace clawSoft.clawPDF
                     _logger.Warn("Processing finishes while there are print jobs left.");
 
                 _processingThread = null;
+                ContinueWithPrintDialog = false;
             }
         }
 
@@ -163,6 +170,11 @@ namespace clawSoft.clawPDF
             bool revertTopMost = true;
             if (SettingsHelper.Settings.ApplicationSettings.PrinterDialogTopMost) revertTopMost = false;
             TopMostHelper.ShowDialogTopMost(window, revertTopMost);
+
+            // "Continue" / closing the window: process the remaining jobs with the print job window.
+            // "Save" keeps the profile behaviour, so the window opens again for the remaining jobs.
+            if (!window.SaveRequested)
+                ContinueWithPrintDialog = true;
         }
     }
 }

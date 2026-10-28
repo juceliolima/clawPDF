@@ -65,6 +65,15 @@ namespace clawSoft.clawPDF.Workflow
                 Job.ApplyMetadata();
             }
 
+            // Profile option: show "Manage Print Jobs" instead of the print job window.
+            // After the user clicks "Continue" there, the queue is processed the normal way.
+            if (!directSave && showPrintDialog && Job.Profile.ShowManagePrintJobs &&
+                !JobRunner.Instance.ContinueWithPrintDialog)
+            {
+                Logger.Info("Profile shows Manage Print Jobs instead of the print job window.");
+                throw new ManagePrintJobsException();
+            }
+
             while (true)
             {
                 if (showPrintDialog)
